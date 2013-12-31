@@ -6,7 +6,7 @@
 #include "utils.h"
 
 #define DEFAULT_RUNS 10
-#define DEFAULT_FILE "RanInt_n012_ss_01.txt"
+#define DEFAULT_FILE "RanInt_n010_ss_01.txt"
 
 int main(int argc, char *argv[])
 {
@@ -34,6 +34,7 @@ int main(int argc, char *argv[])
         //Teste
         /*gets(nome_fich);*/
         strcpy(nome_fich,DEFAULT_FILE);
+        num_iter = 10000;
     }
   
 	if(runs <= 0)
@@ -43,7 +44,7 @@ int main(int argc, char *argv[])
     
     
     /* Preenche matriz de adjacencias */
-    dist = init_dados(nome_fich, &m, &g, &num_iter);
+    dist = init_dados(nome_fich, &m, &g);
     
     printf("Elementos: %d\n",m);
     printf("Sub-conjuntos: %d\n",g);
@@ -68,25 +69,25 @@ int main(int argc, char *argv[])
         
         
 		// Trepa colinas simples
-		//custo = trepa_colinas(sol, grafo, vert, num_iter);
+		custo = trepa_colinas(sol, dist, m, g, num_iter);
     
 		// Trepa colinas probabilístico
 		//custo = tc_prob(sol, grafo, vert, num_iter);
 
 		// Trepa colinas Recristalização Simulada
 		//custo = tc_simulated_annealing(sol, grafo, vert, num_iter);
-        custo = 0;
+        
         
 		// Escreve resultados da repeticao k
 		printf("\nRepeticao %d:", k);
 		escreve_sol(sol, m, g);
-		printf("Custo final: %2d\n", custo);    
+		printf("Custo final: %2d\n", custo);
 		
 		mbf += custo;
-		if(k==0 || best_custo > custo)
+		if(k==0 || best_custo < custo)
 		{
 			best_custo = custo;
-			substitui(best, sol, m);
+			copia(best, sol, m);
 		}
     } 
 	
@@ -94,7 +95,7 @@ int main(int argc, char *argv[])
 	printf("\n\nMBF: %f\n", mbf/k);
 	printf("\nMelhor solucao encontrada");
 	escreve_sol(best, m, g);
-	printf("Custo final: %2d\n", best_custo);    
+	printf("Custo final: %2d\n", best_custo);
 	
     // Libertar memoria
     for (i=0; i<(m-1); i++)

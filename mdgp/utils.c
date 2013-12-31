@@ -7,7 +7,7 @@
 // Leitura do ficheiro de input
 // Recebe: nome do ficheiro, numero de vertices (ptr), numero de iteracoes (ptr)
 // Devolve a matriz de adjacencias
-int** init_dados(char *nome, int *m, int *g, int *iter)
+int** init_dados(char *nome, int *m, int *g)
 {
 	FILE *f;
 	int **dist;
@@ -20,10 +20,10 @@ int** init_dados(char *nome, int *m, int *g, int *iter)
 		exit(1);
 	}
 	
-	// Numero de iteracoes
+	// Numero de elementos
 	fscanf(f, " %d", m);
 	
-	// Numero de vertices
+	// Numero de sub-conjuntos
 	fscanf(f, " %d", g);
     
     // Linhas
@@ -141,12 +141,22 @@ void escreve_sol(int *sol, int m, int g)
 }
 
 
-// copia vector b para a (tamanho n)
-void substitui(int a[], int b[], int n)
+// Copia vector b para a (tamanho n)
+void copia(int a[], int b[], int n)
 {
     int i;
     for(i=0; i<n; i++)
         a[i]=b[i];
+}
+
+
+// Troca de
+void troca(int *sol, int a, int b)
+{
+    int aux;
+    aux = sol[b];
+    sol[b] = sol[a];
+    sol[a] = aux;
 }
 
 

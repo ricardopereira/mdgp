@@ -1,0 +1,6 @@
+MDGP:
+
+RanInt_n010_ss_01.txt: 1292.00 
+RanInt_n012_ss_01.txt:  985.00
+RanInt_n030_ss_01.txt: Entre  5324.00 e 17084.75
+RanInt_n060_ss_01.txt: Entre 18408.00 e 83352.74
