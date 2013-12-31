@@ -6,12 +6,14 @@
 #include "utils.h"
 
 #define DEFAULT_RUNS 10
+#define DEFAULT_FILE "RanInt_n010_ss_01.txt"
 
 int main(int argc, char *argv[])
 {
     char nome_fich[100];
-    int *grafo, *sol, *best, **dist;
-    int m, g, num_iter, k, i,j, runs, custo, best_custo;
+    int *sol, *best;
+    int **dist;
+    int m, g, num_iter, k, i, runs, custo, best_custo;
 	float mbf = 0.0;
 
 	if(argc == 3)
@@ -27,8 +29,11 @@ int main(int argc, char *argv[])
 	else
     {
 		runs = DEFAULT_RUNS;
-        /*printf("Nome do Ficheiro: ");*/
+        printf("Nome do Ficheiro: ");
+        
+        //Teste
         /*gets(nome_fich);*/
+        strcpy(nome_fich,DEFAULT_FILE);
     }
   
 	if(runs <= 0)
@@ -37,47 +42,19 @@ int main(int argc, char *argv[])
 	init_rand();
     
     
-    
     /* Preenche matriz de adjacencias */
-    /*grafo = init_dados(nome_fich, &m, &g, &num_iter);*/
-    m = 10;
-    g = 2;
+    dist = init_dados(nome_fich, &m, &g, &num_iter);
     
-    /* Linhas */
-    if (( dist = (int**)malloc(sizeof(int*) * (m-1))) == NULL )
-    {
+    printf("Elementos: %d\n",m);
+    printf("Sub-conjuntos: %d\n",g);
     
-    }
+    mostra_matriz(dist,m);
     
-    for (i=0; i<(m-1); i++)
-    {
-        /* Colunas de cada linha */
-        if (( dist[i] = (int*)calloc(m,sizeof(int))) == NULL )
-        {
-        
-        }
-        
-        /* Iniciar linha */
+    mostra_distancia(dist,m,4,3);
+    mostra_distancia(dist,m,3,4);
 
-    }
-    
-    dist[8][9] = 5;
-    dist[8][8] = 6;
-    
-    printf("Mostra distancias:\n");
-    for (i=0; i<(m-1); i++)
-        for (j=0; j<m; j++)
-            if (dist[i][j])
-            {
-                printf("%d\n",dist[i][j]);
-            }
-    
-    
-    for (i=0; i<(m-1); i++)
-        free(dist[i]);
-    free(dist);
-    
-    
+    exit(0);
+
   	
 	sol = malloc(sizeof(int)*m);
 	best = malloc(sizeof(int)*m);
@@ -94,7 +71,6 @@ int main(int argc, char *argv[])
 		gera_sol_inicial(sol, m, g);
         
         
-    
 		// Trepa colinas simples
 		//custo = trepa_colinas(sol, grafo, vert, num_iter);
     
@@ -104,6 +80,7 @@ int main(int argc, char *argv[])
 		// Trepa colinas Recristalização Simulada
 		//custo = tc_simulated_annealing(sol, grafo, vert, num_iter);
 
+        
 		// Escreve resultados da repeticao k
 		printf("\nRepeticao %d:", k);
 		escreve_sol(sol, m, g);
@@ -123,7 +100,10 @@ int main(int argc, char *argv[])
 	escreve_sol(best, m, g);
 	printf("Custo final: %2d\n", best_custo);    
 	
-	free(grafo);
+    // Libertar memoria
+    for (i=0; i<(m-1); i++)
+        free(dist[i]);
+    free(dist);
     free(sol);    
 	free(best);
     return 0;    

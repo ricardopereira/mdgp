@@ -7,43 +7,99 @@
 // Leitura do ficheiro de input
 // Recebe: nome do ficheiro, numero de vertices (ptr), numero de iteracoes (ptr)
 // Devolve a matriz de adjacencias
-int* init_dados(char *nome, int *n, int *iter)
+int** init_dados(char *nome, int *m, int *g, int *iter)
 {
 	FILE *f;
-	int *p, *q;
-	int i, j;
+	int **dist;
+	int i, j, idx, lines;
 
-	f=fopen(nome, "r");
-	if(!f)
+	f=fopen(nome,"r");
+	if (!f)
 	{
 		printf("Erro no acesso ao ficheiro dos dados\n");
 		exit(1);
 	}
 	
 	// Numero de iteracoes
-	fscanf(f, " %d", iter);
+	fscanf(f, " %d", m);
 	
 	// Numero de vertices
-	fscanf(f, " %d", n);
-	
-	// Alocacao dinamica da matriz
-	p = malloc(sizeof(int)*(*n)*(*n));
-	if(!p)
-	{
+	fscanf(f, " %d", g);
+    
+    // Linhas
+    dist = (int**)malloc(sizeof(int*) * (*m-1));
+    if (!dist)
+    {
 	    printf("Erro na alocacao de memoria\n");
 	    exit(1);
-	}
-	q=p;
-	
-	// Preenchimento da matriz
-	for(i=0; i<*n; i++)
-	 for(j=0; j<*n; j++)
-	   fscanf(f, " %d", q++);
+    }
+    
+    for (i=0; i<(*m-1); i++)
+    {
+        // Colunas de cada linha
+        dist[i] = (int*)calloc(*m,sizeof(int));
+        if (!dist[i])
+        {
+            printf("Erro na alocacao de memoria para linha %d\n",i);
+            exit(1);
+        }
+    }
+    
+    //Número de linhas
+    lines=(*m * (*m-1)/2);
+    // Preencher matriz
+    for (idx=0; idx<lines; idx++)
+    {
+        //Lado A
+        fscanf(f, " %d", &i);
+        //Lado B
+        fscanf(f, " %d", &j);
+        //Valor Distancia
+        fscanf(f, " %d", &dist[i][j]);
+    }
+
 	fclose(f);
-	
-	return p;
+	return dist;
 }
 
+
+// Mostra a matriz das distancias
+void mostra_matriz(int **dist, int m)
+{
+    int i, j;
+    printf("\nMostra distancias:\n");
+    for (i=0; i<(m-1); i++)
+        for (j=0; j<m; j++)
+            if (dist[i][j])
+            {
+                printf("%d\n",dist[i][j]);
+            }
+}
+
+
+// Obter o valor da distancia entre dois pontos
+int obter_distancia(int **dist, int m, int a, int b)
+{
+    int i,j;
+    if (a > b)
+    {
+        i = b;
+        j = a;
+    }
+    else
+    {
+        i = a;
+        j = b;
+    }
+    return dist[i][j];
+}
+
+
+// Mostra a distancia entre dois pontos
+void mostra_distancia(int **dist, int m, int a, int b)
+{
+    printf("%d\n",obter_distancia(dist,m,a,b));
+}
 
 
 // Gera a solucao inicial
