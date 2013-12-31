@@ -6,7 +6,7 @@
 #include "utils.h"
 
 #define DEFAULT_RUNS 10
-#define DEFAULT_FILE "RanInt_n010_ss_01.txt"
+#define DEFAULT_FILE "RanInt_n012_ss_01.txt"
 
 int main(int argc, char *argv[])
 {
@@ -49,12 +49,8 @@ int main(int argc, char *argv[])
     printf("Sub-conjuntos: %d\n",g);
     
     mostra_matriz(dist,m);
+    printf("\n");
     
-    mostra_distancia(dist,m,4,3);
-    mostra_distancia(dist,m,3,4);
-
-    exit(0);
-
   	
 	sol = malloc(sizeof(int)*m);
 	best = malloc(sizeof(int)*m);
@@ -79,7 +75,7 @@ int main(int argc, char *argv[])
 
 		// Trepa colinas Recristalização Simulada
 		//custo = tc_simulated_annealing(sol, grafo, vert, num_iter);
-
+        custo = 0;
         
 		// Escreve resultados da repeticao k
 		printf("\nRepeticao %d:", k);

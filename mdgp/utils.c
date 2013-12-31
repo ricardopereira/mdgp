@@ -106,18 +106,21 @@ void mostra_distancia(int **dist, int m, int a, int b)
 // Parametros: solucao, m = nr de elementos, g = nr de sub-conjuntos
 void gera_sol_inicial(int *sol, int m, int g)
 {
-	int i, x;
-	
-	for(i=0; i<m; i++)
-	  sol[i]=0;
-	 
-	for(i=0; i<m/2; i++)
-    {
-        do
-			x = random_l_h(0, m-1);
-        while(sol[x] != 0);
-        sol[x]=1;
-    }
+	int i, x, subc;
+
+	// Primeiro sub-conjunto: 0
+	for (i=0; i<m; i++)
+        sol[i]=0;
+    
+    // Restante sub-conjuntos: 1,2,3... g
+    for (subc=1; subc<g; subc++)
+        for (i=0; i<m/g; i++)
+        {
+            do
+                x = random_l_h(0, m-1);
+            while (sol[x] != 0);
+            sol[x]=subc;
+        }
 }
 
 
@@ -125,17 +128,16 @@ void gera_sol_inicial(int *sol, int m, int g)
 // Parametros: solucao, nr de elementos, nr de sub-conjuntos
 void escreve_sol(int *sol, int m, int g)
 {
-	int i;
-	
-	printf("\nConjunto A: ");
-	for(i=0; i<m; i++)
-		if(sol[i]==0)
-			printf("%2d  ", i);
-	printf("\nConjunto B: ");
-	for(i=0; i<m; i++)
-		if(sol[i]==1)
-			printf("%2d  ", i);
-	printf("\n");
+	int i, subc;
+    
+    for (subc=0; subc<g; subc++)
+    {
+        printf("\nConjunto %d: ",subc+1);
+        for(i=0; i<m; i++)
+            if(sol[i] == subc)
+                printf("%2d  ", i);
+    }
+    printf("\n");
 }
 
 
