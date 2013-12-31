@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		D7D7F20E18710D6700CF4CA7 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = D7D7F20D18710D6700CF4CA7 /* main.c */; };
 		D7D7F21018710D6700CF4CA7 /* mdgp.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = D7D7F20F18710D6700CF4CA7 /* mdgp.1 */; };
+		D7D7F21C18710ED600CF4CA7 /* algoritmo.c in Sources */ = {isa = PBXBuildFile; fileRef = D7D7F21918710ED600CF4CA7 /* algoritmo.c */; };
+		D7D7F21D18710ED600CF4CA7 /* funcao.c in Sources */ = {isa = PBXBuildFile; fileRef = D7D7F21A18710ED600CF4CA7 /* funcao.c */; };
+		D7D7F21E18710ED600CF4CA7 /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = D7D7F21B18710ED600CF4CA7 /* utils.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +31,12 @@
 		D7D7F20A18710D6700CF4CA7 /* mdgp */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mdgp; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7D7F20D18710D6700CF4CA7 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		D7D7F20F18710D6700CF4CA7 /* mdgp.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = mdgp.1; sourceTree = "<group>"; };
+		D7D7F21618710ED600CF4CA7 /* algoritmo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = algoritmo.h; sourceTree = "<group>"; };
+		D7D7F21718710ED600CF4CA7 /* funcao.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = funcao.h; sourceTree = "<group>"; };
+		D7D7F21818710ED600CF4CA7 /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
+		D7D7F21918710ED600CF4CA7 /* algoritmo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = algoritmo.c; sourceTree = "<group>"; };
+		D7D7F21A18710ED600CF4CA7 /* funcao.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = funcao.c; sourceTree = "<group>"; };
+		D7D7F21B18710ED600CF4CA7 /* utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = utils.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +70,12 @@
 			isa = PBXGroup;
 			children = (
 				D7D7F20D18710D6700CF4CA7 /* main.c */,
+				D7D7F21618710ED600CF4CA7 /* algoritmo.h */,
+				D7D7F21918710ED600CF4CA7 /* algoritmo.c */,
+				D7D7F21718710ED600CF4CA7 /* funcao.h */,
+				D7D7F21A18710ED600CF4CA7 /* funcao.c */,
+				D7D7F21818710ED600CF4CA7 /* utils.h */,
+				D7D7F21B18710ED600CF4CA7 /* utils.c */,
 				D7D7F20F18710D6700CF4CA7 /* mdgp.1 */,
 			);
 			path = mdgp;
@@ -117,6 +132,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D7D7F21D18710ED600CF4CA7 /* funcao.c in Sources */,
+				D7D7F21E18710ED600CF4CA7 /* utils.c in Sources */,
+				D7D7F21C18710ED600CF4CA7 /* algoritmo.c in Sources */,
 				D7D7F20E18710D6700CF4CA7 /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -225,6 +243,7 @@
 				D7D7F21518710D6700CF4CA7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
