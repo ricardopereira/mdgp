@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "algoritmo.h"
+#include "funcao.h"
 #include "utils.h"
 
 enum TipoAlgoritmo
@@ -25,6 +26,13 @@ int main(int argc, char *argv[])
     int **dist;
     int m, g, num_iter, k, i, runs, custo, best_custo;
 	float mbf = 0.0;
+    // Evolutivo
+	struct info parameters;
+	pchrom pop = NULL, parents = NULL;
+	int gen_actual;
+	chrom best_run, best_ever;
+	float coord[MAXPOINTS][2];
+
 
 	if(argc == 3)
 	{
@@ -54,6 +62,7 @@ int main(int argc, char *argv[])
     // Configuracao
     algoritmo = algTrepaColinas;
     num_iter = 10000;
+    //parameters
     
     // Preenche matriz de distancias
     dist = init_dados(nome_fich, &m, &g);
@@ -131,7 +140,49 @@ int main(int argc, char *argv[])
             break;
             
         case algGeneticoPorTorneio:
+            for (k=0; k<runs; k++)
+            {
+                pop = init_pop(parameters);								// Geracao da populacao inicial
+                evaluate(pop, parameters, coord);						// Avaliacao da populacao inicial
+                gen_actual = 1;
+                best_run=pop[0];
+                best_run = get_best(pop, parameters, best_run);			// Inicializar a melhor solucao encontrada
+                parents = malloc(sizeof(chrom)*parameters.popsize);		// Reservar espaco para os pais
+                if (parents == NULL)
+                {
+                    printf("Erro na alocacao de memoria\n");
+                    exit(1);
+                }
+                // Main evolutionary loop
+                
+                while (gen_actual <= parameters.numGenerations)
+                {
+                    //binary_tournament(pop, parameters, parents);		// Torneio binario para encontrar os progenitores (ficam armazenados no vector parents)
+                    sized_tournament(pop, parameters, parents);
+                    
+                    genetic_operators(parents, parameters, pop); 		// Aplicar operadores geneticos aos pais (os descendentes ficam armazenados no vector pop)
+                    evaluate(pop, parameters, coord);					// Avaliar a nova populacao
+                    best_run = get_best(pop, parameters, best_run);		// Actualizar a melhor solucao encontrada
+                    gen_actual++;
+                }
+                
+                // Escreve resultados da repeticao que terminou
+                printf("\nRepeticao %d:",k);
+                write_best(best_run, parameters);
+                
+                mbf += best_run.distance;
+                if(k==0 || best_run.distance < best_ever.distance)
+                    best_ever = best_run;
+                
+                free(pop);
+                free(parents);
+            }
             
+            // Escreve resultados globais
+            printf("\n\nMBF: %f\n", mbf/k);
+            
+            printf("\nMelhor solucao encontrada");
+            write_best(best_ever, parameters);
             break;
     }
   		

@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include "utils.h"
 
+#include "algoritmo.h"
+#include "utils.h"
 
 // Leitura do ficheiro de input
 // Recebe: nome do ficheiro, numero de vertices (ptr), numero de iteracoes (ptr)
@@ -181,3 +182,88 @@ float rand_01()
 }
 
 
+
+// Computação Evolucinaria
+
+void swap(int *a, int *b)
+{
+    int x;
+    
+    x=*a;
+    *a=*b;
+    *b=x;
+}
+
+
+// Geracao de uma permutacao aleatoria (Knuth shuffle algorithm)
+void generate_p(int tab[], int tam)
+{
+	int i;
+    
+	for(i=0; i<tam; i++)
+        tab[i]=i+1;
+    
+	for(i=tam-1; i>=0; i--)
+        swap(&tab[i], &tab[random_l_h(0, tam-1)]);
+}
+
+
+// Criacao da populacao inicial. O vector e alocado dinamicamente
+// Argumento: Estrutura com parametros
+// Devolve o vector com a populacao
+pchrom init_pop(struct info d)
+{
+	int i;
+	pchrom p = malloc(sizeof(chrom)*d.popsize);
+	if(p==NULL)
+	{
+		printf("Erro na alocacao de memoria\n");
+		exit(1);
+	}
+	
+	for(i=0; i<d.popsize; i++)
+	{
+		generate_p((p+i)->chromosome, d.numCities);
+		(p+i)->distance = 0.0;
+	}
+	return p;
+}
+
+
+// Actualiza a melhor solucao encontrada
+// Argumentos: populacao actual, estrutura com parametros e melhor solucao encontrada ate a geracao imediatamente anterior
+// Devolve a melhor solucao encontrada ate a geracao actual
+chrom get_best(pchrom pop, struct info d, chrom best)
+{
+	int i;
+	
+	for(i=0; i<d.popsize; i++)
+	{
+		if(best.distance > pop[i].distance)
+			best=pop[i];
+	}
+	return best;
+}
+
+
+// Escreve uma solucao na consola
+// Argumentos: solucao e estrutura com parametros
+void write_best(chrom x, struct info d)
+{
+	int i;
+    
+	printf("\n\nBest solution: %4.3f\n", x.distance);
+	for(i=0; i<d.numCities; i++)
+		printf("%d  ", x.chromosome[i]);
+	putchar('\n');
+}
+
+// Simula o lancamento de uma moeda
+int flip()
+{
+	if ((((float)rand()) / RAND_MAX) < 0.5)
+		return 0;
+	
+	else
+		return 1;
+}
