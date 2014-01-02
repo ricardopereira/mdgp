@@ -23,15 +23,14 @@ int main(int argc, char *argv[])
     enum TipoAlgoritmo algoritmo;
     char nome_fich[100];
     int *sol, *best;
-    int **dist;
-    int m, g, num_iter, k, i, runs, custo, best_custo;
+    int** dist;
+    int m, g, num_iter, k, i, runs, custo, custo_best = 0;
 	float mbf = 0.0;
     // Evolutivo
 	struct info parameters;
-	pchrom pop = NULL, parents = NULL;
 	int gen_actual;
 	chrom best_run, best_ever;
-	float coord[MAXPOINTS][2];
+    pchrom pop = NULL, parents = NULL;
 
 
 	if(argc == 3)
@@ -60,12 +59,21 @@ int main(int argc, char *argv[])
 	init_rand();
     
     // Configuracao
-    algoritmo = algTrepaColinas;
-    num_iter = 10000;
-    //parameters
+    algoritmo = algGeneticoPorTorneio;
+    num_iter = 1000;
+    parameters.numGenerations = 2500;
+    parameters.popsize = 100;
+    parameters.pm_swap = 0.1;
+    parameters.pm_ins = 0.9;
+	parameters.pm_inv = 0.9;
+    parameters.pr = 0.0;
+	parameters.t_size = 2;
     
     // Preenche matriz de distancias
     dist = init_dados(nome_fich, &m, &g);
+    
+    parameters.m = m; //Nr Elementos
+    parameters.g = g; //Nr Sub-conjuntos
     
     printf("Elementos: %d\n",m);
     printf("Sub-conjuntos: %d\n",g);
@@ -81,8 +89,8 @@ int main(int argc, char *argv[])
         case algTrepaColinasProb:
         case algRecristalizacaoSimulada:
         case algTabu:
-            sol = malloc(sizeof(int)*m);
-            best = malloc(sizeof(int)*m);
+            sol = calloc(m,sizeof(int));
+            best = calloc(m,sizeof(int));
             
             if(sol == NULL || best == NULL)
             {
@@ -122,70 +130,93 @@ int main(int argc, char *argv[])
                 printf("Custo final: %2d\n", custo);
                 
                 mbf += custo;
-                if(k==0 || best_custo < custo)
+                if(k == 0 || custo_best < custo)
                 {
-                    best_custo = custo;
+                    custo_best = custo;
                     copia(best, sol, m);
                 }
             } 
             
-            // Escreve eresultados globais
+            // Escreve resultados globais
             printf("\n\nMBF: %f\n", mbf/k);
             printf("\nMelhor solucao encontrada");
             escreve_sol(best, m, g);
-            printf("Custo final: %2d\n", best_custo);
+            printf("Custo final: %2d\n", custo_best);
             
+            // Libertar memoria
             free(sol);
             free(best);
             break;
             
         case algGeneticoPorTorneio:
+            
+            best_ever.sol = calloc(m,sizeof(int));
+            
+            // Repeticoes
             for (k=0; k<runs; k++)
             {
-                pop = init_pop(parameters);								// Geracao da populacao inicial
-                evaluate(pop, parameters, coord);						// Avaliacao da populacao inicial
+                // Geracao da populacao inicial
+                pop = init_pop(parameters, dist);
+                
                 gen_actual = 1;
-                best_run=pop[0];
-                best_run = get_best(pop, parameters, best_run);			// Inicializar a melhor solucao encontrada
-                parents = malloc(sizeof(chrom)*parameters.popsize);		// Reservar espaco para os pais
-                if (parents == NULL)
+                best_run = pop[0];
+                // Inicializar a melhor solucao encontrada
+                best_run = get_best(pop, parameters, best_run);
+                
+                // Reservar espaco para os pais
+                parents = malloc(sizeof(chrom) * parameters.popsize);
+                if (!parents)
                 {
                     printf("Erro na alocacao de memoria\n");
                     exit(1);
                 }
-                // Main evolutionary loop
                 
+                // Main evolutionary loop
                 while (gen_actual <= parameters.numGenerations)
                 {
-                    //binary_tournament(pop, parameters, parents);		// Torneio binario para encontrar os progenitores (ficam armazenados no vector parents)
-                    sized_tournament(pop, parameters, parents);
+                    // Torneio binario para encontrar os progenitores (ficam armazenados no vector parents)
+                    //binary_tournament(pop, parameters, parents);
+                    //sized_tournament(pop, parameters, parents);
                     
-                    genetic_operators(parents, parameters, pop); 		// Aplicar operadores geneticos aos pais (os descendentes ficam armazenados no vector pop)
-                    evaluate(pop, parameters, coord);					// Avaliar a nova populacao
-                    best_run = get_best(pop, parameters, best_run);		// Actualizar a melhor solucao encontrada
+                    // Aplicar operadores geneticos aos pais (os descendentes ficam armazenados no vector pop)
+                    //genetic_operators(parents, parameters, pop);
+                    //evaluate(pop, parameters, dist);
+                    
+                    // Actualizar a melhor solucao encontrada
+                    //best_run = get_best(pop, parameters, best_run);
+                    
                     gen_actual++;
                 }
                 
                 // Escreve resultados da repeticao que terminou
                 printf("\nRepeticao %d:",k);
-                write_best(best_run, parameters);
+                escreve_sol(best_run.sol, m, g);
+                printf("Custo: %2d\n", best_run.fitness);
                 
-                mbf += best_run.distance;
-                if(k==0 || best_run.distance < best_ever.distance)
-                    best_ever = best_run;
+                mbf += best_run.fitness;
+                if (k == 0 || best_ever.fitness < best_run.fitness)
+                {
+                    copia(best_ever.sol, best_run.sol, m);
+                    best_ever.fitness = best_run.fitness;
+                }
                 
-                free(pop);
+                // Libertar memoria
+                for (i=0; i<parameters.popsize; i++)
+                    free(pop[i].sol);
                 free(parents);
+                free(pop);
             }
             
             // Escreve resultados globais
             printf("\n\nMBF: %f\n", mbf/k);
-            
             printf("\nMelhor solucao encontrada");
-            write_best(best_ever, parameters);
+            escreve_sol(best_ever.sol, m, g);
+            printf("Custo final: %2d\n", best_ever.fitness);
+            
+            free(best_ever.sol);
             break;
     }
-  		
+
     // Libertar memoria
     for (i=0; i<(m-1); i++)
         free(dist[i]);

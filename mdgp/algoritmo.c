@@ -184,7 +184,8 @@ void binary_tournament(pchrom pop, struct info d, pchrom parents)
 			x2 = random_l_h(0, d.popsize-1);
 		while(x1==x2);
         
-		if((pop+x1)->distance < (pop+x2)->distance)		// Problema de minimizacao
+        // Problema de minimizacao
+		if((pop+x1)->fitness < (pop+x2)->fitness)
 			*(parents + i) = *(pop + x1);
 		else
 			*(parents + i) = *(pop + x2);
@@ -214,7 +215,7 @@ void sized_tournament(pchrom pop, struct info d, pchrom parents)
 		for(j=1; j<d.t_size; j++)
 		{
 			// Problema de minimizacao: só sai um pai
-			if((pop+xvect[j])->distance < (pop+min)->distance)
+			if((pop+xvect[j])->fitness < (pop+min)->fitness)
 				min = xvect[j];
 		}
         
@@ -244,14 +245,14 @@ void recombination(pchrom parents, struct info d, pchrom offspring)
 	{
 		if(rand_01() < d.pr)
 		{
-			cx_order((parents+i)->chromosome, (parents+i+1)->chromosome, (offspring+i)->chromosome, (offspring+i+1)->chromosome, d);
+			cx_order((parents+i)->sol, (parents+i+1)->sol, (offspring+i)->sol, (offspring+i+1)->sol, d);
 		}
 		else
 		{
 			*(offspring+i) = *(parents+i);
 			*(offspring+i+1) = *(parents+i+1);
 		}
-		(offspring+i)->distance =  (offspring+i+1)->distance = 0.0;
+		(offspring+i)->fitness =  (offspring+i+1)->fitness = 0.0;
 	}
 }
 
@@ -260,15 +261,19 @@ void recombination(pchrom parents, struct info d, pchrom offspring)
 // Argumentos: pai1, pai2, descendente1, descendente2, estrutura com parametros
 void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
 {
-	int tab1[MAXPOINTS+1]={0}, tab2[MAXPOINTS+1]={0};
+	int *tab1, *tab2;
 	int point1, point2, index, i;
     
+    tab1 = (int*)calloc(d.m+1,sizeof(int));
+    tab2 = (int*)calloc(d.m+1,sizeof(int));
+    
 	// seleccao dos pontos de corte
-	point1 = random_l_h(0, d.numCities-1);
-	do{
-		point2 = random_l_h(0, d.numCities-1);
-	}while(point1 == point2);
-	if(point1 > point2)
+	point1 = random_l_h(0, d.m-1);
+	do {
+		point2 = random_l_h(0, d.m-1);
+	} while(point1 == point2);
+    
+	if (point1 > point2)
 	{
 		i = point1;
 		point1 = point2;
@@ -276,53 +281,54 @@ void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
 	}
     
 	//copia das seccoes internas
-	for(i = point1; i<=point2; i++)
+	for (i = point1; i<=point2; i++)
 	{
 		d1[i]=p1[i];
 		tab1[p1[i]]=1;
 		d2[i]=p2[i];
 		tab2[p2[i]]=1;
 	}
-    
 	
 	// preencher o resto do descendente 1
-	index = (point2+1)%d.numCities;
-	for(i=point2+1; i<d.numCities; i++)
+	index = (point2+1)%d.m;
+	for (i=point2+1; i<d.m; i++)
 	{
 		if(tab1[p2[i]]==0)
 		{
 			d1[index]=p2[i];
-			index = (index+1)%d.numCities;
+			index = (index+1)%d.m;
 		}
 	}
-	for(i=0; i<=point2; i++)
+	for (i=0; i<=point2; i++)
 	{
 		if(tab1[p2[i]]==0)
 		{
 			d1[index]=p2[i];
-			index = (index+1)%d.numCities;
+			index = (index+1)%d.m;
 		}
 	}
-    
     
 	// preencher o resto do descendente 1
-	index = (point2+1)%d.numCities;
-	for(i=point2+1; i<d.numCities; i++)
+	index = (point2+1)%d.m;
+	for (i=point2+1; i<d.m; i++)
 	{
-		if(tab2[p1[i]]==0)
+		if (tab2[p1[i]]==0)
 		{
 			d2[index]=p1[i];
-			index = (index+1)%d.numCities;
+			index = (index+1)%d.m;
 		}
 	}
-	for(i=0; i<=point2; i++)
+	for (i=0; i<=point2; i++)
 	{
-		if(tab2[p1[i]]==0)
+		if (tab2[p1[i]]==0)
 		{
 			d2[index]=p1[i];
-			index = (index+1)%d.numCities;
+			index = (index+1)%d.m;
 		}
 	}
+    
+    free(tab1);
+    free(tab2);
 }
 
 // Chama as funcoes que implementam as operacoes de mutacao (de acordo com as respectivas probabilidades)
@@ -332,16 +338,16 @@ void mutation(struct info d, pchrom offspring)
 {
 	int i;
     
-	for(i=0; i< d.popsize; i++)
+	for(i=0; i<d.popsize; i++)
 	{
 		if(rand_01() < d.pm_swap)
-			mutation_swap(d, (offspring+i)->chromosome);
+			mutation_swap(d, (offspring+i)->sol);
         
 		// Functions nao implementadas
-		if(rand_01() < d.pm_ins)
-			mutation_ins(d, (offspring+i)->chromosome);
-		if(rand_01() < d.pm_inv)
-			mutation_inv(d, (offspring+i)->chromosome);
+		//if(rand_01() < d.pm_ins)
+		//	mutation_ins(d, (offspring+i)->sol);
+		//if(rand_01() < d.pm_inv)
+		//	mutation_inv(d, (offspring+i)->sol);
 	}
 }
 
@@ -352,9 +358,9 @@ void mutation_swap(struct info d, int a[])
 {
 	int x, y, z;
     
-	x=random_l_h(0,	d.numCities-1);
+	x=random_l_h(0,	d.m-1);
 	do{
-		y=random_l_h(0, d.numCities-1);
+		y=random_l_h(0, d.m-1);
 	}while(x==y);
     
 	z=a[x];

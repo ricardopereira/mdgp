@@ -4,6 +4,7 @@
 
 #include "algoritmo.h"
 #include "utils.h"
+#include "funcao.h"
 
 // Leitura do ficheiro de input
 // Recebe: nome do ficheiro, numero de vertices (ptr), numero de iteracoes (ptr)
@@ -194,41 +195,45 @@ void swap(int *a, int *b)
     *b=x;
 }
 
-
-// Geracao de uma permutacao aleatoria (Knuth shuffle algorithm)
-void generate_p(int tab[], int tam)
-{
-	int i;
-    
-	for(i=0; i<tam; i++)
-        tab[i]=i+1;
-    
-	for(i=tam-1; i>=0; i--)
-        swap(&tab[i], &tab[random_l_h(0, tam-1)]);
-}
-
-
 // Criacao da populacao inicial. O vector e alocado dinamicamente
 // Argumento: Estrutura com parametros
 // Devolve o vector com a populacao
-pchrom init_pop(struct info d)
+pchrom init_pop(struct info d, int** dist)
 {
 	int i;
-	pchrom p = malloc(sizeof(chrom)*d.popsize);
-	if(p==NULL)
-	{
-		printf("Erro na alocacao de memoria\n");
-		exit(1);
-	}
-	
-	for(i=0; i<d.popsize; i++)
-	{
-		generate_p((p+i)->chromosome, d.numCities);
-		(p+i)->distance = 0.0;
-	}
+    
+    // Linhas
+    pchrom p = malloc(sizeof(chrom) * d.popsize);
+    if (!p)
+    {
+	    printf("Erro na alocacao de memoria\n");
+	    exit(1);
+    }
+    
+    for (i=0; i<d.popsize; i++)
+    {
+        // Colunas de cada linha
+        p[i].sol = (int*)calloc(d.m,sizeof(int));
+        if (!p[i].sol)
+        {
+            printf("Erro na alocacao de memoria para linha %d\n",i);
+            exit(1);
+        }
+        
+        gera_sol_inicial(p[i].sol, d.m, d.g);
+        
+        p[i].fitness = calcula_fit(p[i].sol, dist, d.m, d.g);
+    }
+        
 	return p;
 }
 
+void evaluate(pchrom pop, struct info d, int** dist)
+{
+	int i;
+    for (i=0; i<d.popsize; i++)
+        pop[i].fitness = calcula_fit(pop[i].sol, dist, d.m, d.g);
+}
 
 // Actualiza a melhor solucao encontrada
 // Argumentos: populacao actual, estrutura com parametros e melhor solucao encontrada ate a geracao imediatamente anterior
@@ -236,26 +241,12 @@ pchrom init_pop(struct info d)
 chrom get_best(pchrom pop, struct info d, chrom best)
 {
 	int i;
-	
-	for(i=0; i<d.popsize; i++)
+	for (i=0; i<d.popsize; i++)
 	{
-		if(best.distance > pop[i].distance)
-			best=pop[i];
+		if(best.fitness > pop[i].fitness)
+			best = pop[i];
 	}
 	return best;
-}
-
-
-// Escreve uma solucao na consola
-// Argumentos: solucao e estrutura com parametros
-void write_best(chrom x, struct info d)
-{
-	int i;
-    
-	printf("\n\nBest solution: %4.3f\n", x.distance);
-	for(i=0; i<d.numCities; i++)
-		printf("%d  ", x.chromosome[i]);
-	putchar('\n');
 }
 
 // Simula o lancamento de uma moeda

@@ -6,18 +6,16 @@ int tc_simulated_annealing(int sol[], int **mat, int m, int g, int num_iter);
 
 // Computação Evolucinaria
 
-// Numero maximo de pontos
-#define MAXPOINTS 800
-
-// EStrutura para armazenar parametros
+// Estrutura para armazenar parametros
 struct info {
+    int m;
+    int g;
     int popsize;
     float pm_swap;
 	float pm_ins;
 	float pm_inv;
     float pr;
 	int t_size;
-    int numCities;
     int numGenerations;
 };
 
@@ -25,8 +23,8 @@ struct info {
 typedef struct individual chrom, *pchrom;
 
 struct individual {
-    int chromosome[MAXPOINTS];		// trajecto
-	float distance;					// distancia (qualidade)
+    int* sol; //solucao
+	int fitness; // distancia (qualidade)
 };
 
 void binary_tournament(pchrom pop, struct info d, pchrom parents);
