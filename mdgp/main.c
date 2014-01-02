@@ -16,7 +16,7 @@ enum TipoAlgoritmo
 };
 
 #define DEFAULT_RUNS 10
-#define DEFAULT_FILE "RanInt_n012_ss_01.txt"
+#define DEFAULT_FILE "RanInt_n060_ss_01.txt"
 
 int main(int argc, char *argv[])
 {
@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     parameters.pm_ins = 0.9;
 	parameters.pm_inv = 0.9;
     parameters.pr = 0.0;
-	parameters.t_size = 2;
+	parameters.t_size = 4;
     
     // Preenche matriz de distancias
     dist = init_dados(nome_fich, &m, &g);
@@ -176,14 +176,16 @@ int main(int argc, char *argv[])
                 {
                     // Torneio binario para encontrar os progenitores (ficam armazenados no vector parents)
                     //binary_tournament(pop, parameters, parents);
-                    //sized_tournament(pop, parameters, parents);
+                    sized_tournament(pop, parameters, parents);
+                    
+                    // ToDo - reparacao
                     
                     // Aplicar operadores geneticos aos pais (os descendentes ficam armazenados no vector pop)
                     //genetic_operators(parents, parameters, pop);
-                    //evaluate(pop, parameters, dist);
+                    evaluate(pop, parameters, dist);
                     
                     // Actualizar a melhor solucao encontrada
-                    //best_run = get_best(pop, parameters, best_run);
+                    best_run = get_best(pop, parameters, best_run);
                     
                     gen_actual++;
                 }

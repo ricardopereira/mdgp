@@ -184,11 +184,11 @@ void binary_tournament(pchrom pop, struct info d, pchrom parents)
 			x2 = random_l_h(0, d.popsize-1);
 		while(x1==x2);
         
-        // Problema de minimizacao
+        // Problema de maximizacao
 		if((pop+x1)->fitness < (pop+x2)->fitness)
-			*(parents + i) = *(pop + x1);
-		else
 			*(parents + i) = *(pop + x2);
+		else
+			*(parents + i) = *(pop + x1);
 	}
 }
 
@@ -245,90 +245,25 @@ void recombination(pchrom parents, struct info d, pchrom offspring)
 	{
 		if(rand_01() < d.pr)
 		{
-			cx_order((parents+i)->sol, (parents+i+1)->sol, (offspring+i)->sol, (offspring+i+1)->sol, d);
-		}
-		else
-		{
+			//cx_order((parents+i)->sol, (parents+i+1)->sol, (offspring+i)->sol, (offspring+i+1)->sol, d);
 			*(offspring+i) = *(parents+i);
 			*(offspring+i+1) = *(parents+i+1);
 		}
-		(offspring+i)->fitness =  (offspring+i+1)->fitness = 0.0;
+		else
+		{
+            //Mantem
+			*(offspring+i) = *(parents+i);
+			*(offspring+i+1) = *(parents+i+1);
+		}
+		(offspring+i)->fitness = (offspring+i+1)->fitness = 0;
 	}
 }
-
 
 // Recombinacao por ordem
 // Argumentos: pai1, pai2, descendente1, descendente2, estrutura com parametros
 void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
 {
-	int *tab1, *tab2;
-	int point1, point2, index, i;
-    
-    tab1 = (int*)calloc(d.m+1,sizeof(int));
-    tab2 = (int*)calloc(d.m+1,sizeof(int));
-    
-	// seleccao dos pontos de corte
-	point1 = random_l_h(0, d.m-1);
-	do {
-		point2 = random_l_h(0, d.m-1);
-	} while(point1 == point2);
-    
-	if (point1 > point2)
-	{
-		i = point1;
-		point1 = point2;
-		point2 = i;
-	}
-    
-	//copia das seccoes internas
-	for (i = point1; i<=point2; i++)
-	{
-		d1[i]=p1[i];
-		tab1[p1[i]]=1;
-		d2[i]=p2[i];
-		tab2[p2[i]]=1;
-	}
-	
-	// preencher o resto do descendente 1
-	index = (point2+1)%d.m;
-	for (i=point2+1; i<d.m; i++)
-	{
-		if(tab1[p2[i]]==0)
-		{
-			d1[index]=p2[i];
-			index = (index+1)%d.m;
-		}
-	}
-	for (i=0; i<=point2; i++)
-	{
-		if(tab1[p2[i]]==0)
-		{
-			d1[index]=p2[i];
-			index = (index+1)%d.m;
-		}
-	}
-    
-	// preencher o resto do descendente 1
-	index = (point2+1)%d.m;
-	for (i=point2+1; i<d.m; i++)
-	{
-		if (tab2[p1[i]]==0)
-		{
-			d2[index]=p1[i];
-			index = (index+1)%d.m;
-		}
-	}
-	for (i=0; i<=point2; i++)
-	{
-		if (tab2[p1[i]]==0)
-		{
-			d2[index]=p1[i];
-			index = (index+1)%d.m;
-		}
-	}
-    
-    free(tab1);
-    free(tab2);
+
 }
 
 // Chama as funcoes que implementam as operacoes de mutacao (de acordo com as respectivas probabilidades)
@@ -359,9 +294,9 @@ void mutation_swap(struct info d, int a[])
 	int x, y, z;
     
 	x=random_l_h(0,	d.m-1);
-	do{
+	do {
 		y=random_l_h(0, d.m-1);
-	}while(x==y);
+    } while (x==y);
     
 	z=a[x];
 	a[x]=a[y];
