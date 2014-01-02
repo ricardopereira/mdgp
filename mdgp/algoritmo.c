@@ -65,6 +65,71 @@ int trepa_colinas(int sol[], int **mat, int m, int g, int num_iter)
     return custo;
 }
 
+// Tabu
+// Parametros: solucao, matriz de adjacencias, numero de vertices, numero de iteracoes e numero de descidas tabu
+// Devolve o custo da melhor solucao encontrada
+int tabu_Search(int sol[], int **mat, int m, int g, int num_iter, int num_Tabu_desc, int flagChangeIter)
+{
+    int *nova_sol, custo, custo_viz, custoGlobal=0,tabidx=0, i;
+    int inc=1;
+    
+	nova_sol = malloc(sizeof(int)*m);
+    if(nova_sol == NULL)
+    {
+        printf("Erro na alocacao de memoria");
+        exit(1);
+    }
+    
+	// Avalia solucao inicial
+    custo = calcula_fit(sol, mat, m, g);
+    
+    for (i=0; i<num_iter;)
+    {
+		// Gera vizinho
+		gera_vizinho(sol, nova_sol, m);
+        
+		// Avalia vizinho
+		custo_viz = calcula_fit(nova_sol, mat, m, g);
+        
+		// Aceita vizinho se o custo aumentar (problema de maximizacao)
+        if (custo_viz > custo)
+        {
+            tabidx= 0;
+			custo = custo_viz;
+            if(custo>custoGlobal)
+            {
+                custoGlobal = custo_viz;
+                copia(sol, nova_sol, m);
+            }
+            inc=1;
+        }
+        else
+        {
+            if (num_Tabu_desc>tabidx)
+            {
+                if(flagChangeIter==0)
+                    inc =1;
+                else
+                    inc =0;
+                
+                custo = custo_viz;
+                tabidx++;
+            }
+            else
+                inc = 1;
+        }
+        if (custoGlobal>custo)
+            custo = custoGlobal;
+        
+        if(inc==1)
+            i++;
+    }
+
+    free(nova_sol);
+    
+    return custo;
+}
+
 #define PROB 0.001
 
 int tc_prob(int sol[], int **mat, int m, int g, int num_iter)
@@ -111,7 +176,7 @@ int tc_prob(int sol[], int **mat, int m, int g, int num_iter)
     return custo;
 }
 
-#define TMAX 1.0 //Forçar o valor ser real
+#define TMAX 9999999 //Forçar o valor ser real
 #define TMIN 0.0001
 
 int tc_simulated_annealing(int sol[], int **mat, int m, int g, int num_iter)

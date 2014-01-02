@@ -2,6 +2,7 @@
 int trepa_colinas(int sol[], int **mat, int m, int g, int num_iter);
 int tc_prob(int sol[], int **mat, int m, int g, int num_iter);
 int tc_simulated_annealing(int sol[], int **mat, int m, int g, int num_iter);
+int tabu_Search(int sol[], int **mat, int m, int g, int num_iter, int num_Tabu_desc, int flagChangeIter);
 
 
 // Computação Evolucinaria
@@ -17,6 +18,7 @@ struct info {
     float pr;
 	int t_size;
     int numGenerations;
+    int numTabuDescidas;
 };
 
 // Individuo (solucao)

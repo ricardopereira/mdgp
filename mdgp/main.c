@@ -59,8 +59,12 @@ int main(int argc, char *argv[])
 	init_rand();
     
     // Configuracao
-    algoritmo = algGeneticoPorTorneio;
+    algoritmo = algRecristalizacaoSimulada;
     num_iter = 1000;
+    if(argc==4)
+        parameters.numTabuDescidas = atoi(argv[3]);
+    else
+        parameters.numTabuDescidas = 5;
     parameters.numGenerations = 2500;
     parameters.popsize = 100;
     parameters.pm_swap = 0.1;
@@ -115,10 +119,10 @@ int main(int argc, char *argv[])
                         break;
                     case algRecristalizacaoSimulada:
                         // Trepa colinas Recristalização Simulada
-                        //custo = tc_simulated_annealing(sol, grafo, vert, num_iter);
+                        custo = tc_simulated_annealing(sol, dist, m, g, num_iter);
                         break;
                     case algTabu:
-                        
+                        custo =  tabu_Search(sol, dist, m, g, num_iter, parameters.numTabuDescidas, 1);
                         break;
                     default:
                         exit(0);
