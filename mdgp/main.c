@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
 	init_rand();
     
     // Configuracao
-    algoritmo = algRecristalizacaoSimulada;
+    algoritmo = algGeneticoPorTorneio;
     num_iter = 1000;
     if(argc==4)
         parameters.numTabuDescidas = atoi(argv[3]);
@@ -122,7 +122,7 @@ int main(int argc, char *argv[])
                         custo = tc_simulated_annealing(sol, dist, m, g, num_iter);
                         break;
                     case algTabu:
-                        custo =  tabu_Search(sol, dist, m, g, num_iter, parameters.numTabuDescidas, 1);
+                        custo = tabu_Search(sol, dist, m, g, num_iter, parameters.numTabuDescidas, 1);
                         break;
                     default:
                         exit(0);

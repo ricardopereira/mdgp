@@ -29,7 +29,6 @@ void gera_vizinho(int a[], int b[], int n)
 // Trepa colinas first-choice
 // Parametros: solucao, matriz de adjacencias, numero de vertices e numero de iteracoes
 // Devolve o custo da melhor solucao encontrada
-
 int trepa_colinas(int sol[], int **mat, int m, int g, int num_iter)
 {
     int *nova_sol, custo, custo_viz, i;
@@ -107,7 +106,7 @@ int tabu_Search(int sol[], int **mat, int m, int g, int num_iter, int num_Tabu_d
         {
             if (num_Tabu_desc>tabidx)
             {
-                if(flagChangeIter==0)
+                if (flagChangeIter == 0)
                     inc =1;
                 else
                     inc =0;
@@ -144,17 +143,20 @@ int tc_prob(int sol[], int **mat, int m, int g, int num_iter)
     copia(best_sol, sol, m);
     custo_best = custo;
     
-    for(i=0; i<num_iter; i++){
+    for(i=0; i<num_iter; i++)
+    {
         // Gera vizinho
         gera_vizinho(sol, nova_sol, m);
         // Avalia vizinho
         custo_viz = calcula_fit(nova_sol, mat, m, g);
-        // Aceita vizinho se o custo diminuir (problema de minimizacao)
-        if(custo_viz <= custo){
+        // Aceita vizinho se o custo diminuir (problema de maximizacao)
+        if (custo_viz > custo)
+        {
             copia(sol, nova_sol, m);
             custo = custo_viz;
         }
-        else{
+        else
+        {
             r = rand_01();
             if(r < PROB)
             {
@@ -162,7 +164,8 @@ int tc_prob(int sol[], int **mat, int m, int g, int num_iter)
                 custo = custo_viz;
             }
         }
-        if(custo_best > custo){
+        if (custo_best < custo)
+        {
             copia(best_sol, sol, m);
             custo_best = custo;
         }
@@ -176,7 +179,7 @@ int tc_prob(int sol[], int **mat, int m, int g, int num_iter)
     return custo;
 }
 
-#define TMAX 9999999 //Forçar o valor ser real
+#define TMAX 99
 #define TMIN 0.0001
 
 int tc_simulated_annealing(int sol[], int **mat, int m, int g, int num_iter)
@@ -201,20 +204,23 @@ int tc_simulated_annealing(int sol[], int **mat, int m, int g, int num_iter)
         // Calcular probabilidade
         eprob = exp((custo-custo_viz)/temperatura);
 
-        // Aceita vizinho se o custo diminuir (problema de minimizacao)
-        if(custo_viz <= custo){
+        // Aceita vizinho se o custo diminuir (problema de maximizacao)
+        if(custo_viz > custo)
+        {
             copia(sol, nova_sol, m);
             custo = custo_viz;
         }
-        else{
+        else
+        {
             r = rand_01();
-            if(r < eprob)
+            if (r < eprob)
             {
                 copia(sol, nova_sol, m);
                 custo = custo_viz;
             }
         }
-        if(custo_best > custo){
+        if (custo_best < custo)
+        {
             copia(best_sol, sol, m);
             custo_best = custo;
         }
@@ -233,7 +239,6 @@ int tc_simulated_annealing(int sol[], int **mat, int m, int g, int num_iter)
 
 
 // Computação Evolucinaria
-
 
 // Seleccao por torneio binaria (tamanho de torneio: 2)
 // Argumentos: populacao actual, parametros, pais
