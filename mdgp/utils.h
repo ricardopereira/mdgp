@@ -5,6 +5,8 @@ void gera_sol_inicial(int *sol, int m, int g);
 
 void escreve_sol(int *sol, int m, int g);
 
+void escreve_vect(int *sol, int m);
+
 void mostra_matriz(int **dist, int m);
 
 int obter_distancia(int **dist, int m, int a, int b);

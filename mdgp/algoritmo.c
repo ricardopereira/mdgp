@@ -315,14 +315,16 @@ void recombination(pchrom parents, struct info d, pchrom offspring)
 {
 	int i;
     
-	for(i=0; i<d.popsize; i+=2)
+	for (i=0; i<d.popsize; i+=2)
 	{
-		if(rand_01() < d.pr)
+		if (rand_01() < d.pr)
 		{
+            // Recombinar
 			cx_order((parents+i)->sol, (parents+i+1)->sol, (offspring+i)->sol, (offspring+i+1)->sol, d);
 		}
 		else
 		{
+            // Sem recombinacao
             atribuicao(offspring + i,parents + i,d);
             atribuicao(offspring + i +1,parents + i +1,d);
 		}
@@ -334,75 +336,100 @@ void recombination(pchrom parents, struct info d, pchrom offspring)
 // Argumentos: pai1, pai2, descendente1, descendente2, estrutura com parametros
 void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
 {
-	int* tab1, *tab2;
-	int point1, point2, index, i;
+    int i, aceites;
+	int *tab1, *tab2, *conj;
+    double prob = 0.5;
+    double r;
     
     tab1 = calloc(d.m,sizeof(int));
     tab2 = calloc(d.m,sizeof(int));
+    conj = calloc(d.g,sizeof(int));
     
-	// Seleccao dos pontos de corte
-	point1 = random_l_h(0, d.m-1);
-	do {
-		point2 = random_l_h(0, d.m-1);
-	} while(point1 == point2);
+    escreve_vect(p1, d.m);
+    escreve_sol(p1, d.m, d.g);
+    escreve_vect(p2, d.m);
+    escreve_sol(p2, d.m, d.g);
+
+    // Primeiro descendente
+    i = 0;
+    aceites = 0;
+    while (1)
+    {
+        // Verificar
+        if (aceites >= d.m)
+            break;
+        
+        r = rand_01();
+        if (r < prob)
+        {
+            // Verifica se ja ultrapassa do limite
+            if (conj[p1[i]] >= (d.m/d.g))
+            {
+                // Ultimo
+                if (i == d.m-1)
+                    i = 0;
+                else
+                    i++;
+                continue;
+            }
+            
+            d1[i] = p1[i];
+            tab1[i] = 1;
+        }
+        else
+        {
+            // Verifica se ja ultrapassa do limite
+            if (conj[p2[i]] >= (d.m/d.g))
+            {
+                // Ultimo
+                if (i == d.m-1)
+                    i = 0;
+                else
+                    i++;
+                continue;
+            }
+            
+            d1[i] = p2[i];
+            tab2[i] = 1;
+        }
+        conj[d1[i]]++;
+        
+        printf("\nMemory");
+        escreve_vect(conj, d.g);
+        fflush(0);
+        
+        aceites++;
+        i++;
+    }
     
-	if (point1 > point2)
-	{
-		i = point1;
-		point1 = point2;
-		point2 = i;
-	}
+    //Teste
+    printf("\nFilho1");
+    escreve_vect(d1, d.m);
+    escreve_sol(d1, d.m, d.g);
     
-	// Copia das seccoes internas
-	for (i = point1; i<=point2; i++)
-	{
-		d1[i] = p1[i];
-		tab1[p1[i]] = 1;
-		d2[i] = p2[i];
-		tab2[p2[i]] = 1;
-	}
-	
-	// Preencher o resto do descendente 1
-	index = (point2+1) % d.m;
-	for (i=point2+1; i<d.m; i++)
-	{
-		if (tab1[p2[i]] == 0)
-		{
-			d1[index] = p2[i];
-			index = (index+1) % d.m;
-		}
-	}
-	for (i=0; i<=point2; i++)
-	{
-		if(tab1[p2[i]] == 0)
-		{
-			d1[index] = p2[i];
-			index = (index+1) % d.m;
-		}
-	}
+    // Segundo descendente
+    i = 0;
+    while (i<d.m)
+    {
+        if (tab1[i] == 0)
+        {
+            d2[i] = p1[i];
+        }
+        else if (tab2[i] == 0)
+        {
+            d2[i] = p2[i];
+        }
+        i++;
+    }
     
-	// Preencher o resto do descendente 1
-	index = (point2+1) % d.m;
-	for (i=point2+1; i<d.m; i++)
-	{
-		if (tab2[p1[i]] == 0)
-		{
-			d2[index] = p1[i];
-			index = (index+1) % d.m;
-		}
-	}
-	for (i=0; i<=point2; i++)
-	{
-		if (tab2[p1[i]] == 0)
-		{
-			d2[index] = p1[i];
-			index = (index+1) % d.m;
-		}
-	}
+    //Teste
+    printf("Filho2\n");
+    escreve_sol(d2, d.m, d.g);
     
     // Liberta memória
     free(tab1);
     free(tab2);
+    free(conj);
 }
 
 // Chama as funcoes que implementam as operacoes de mutacao (de acordo com as respectivas probabilidades)

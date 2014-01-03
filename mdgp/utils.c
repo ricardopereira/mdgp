@@ -143,6 +143,17 @@ void escreve_sol(int *sol, int m, int g)
 }
 
 
+// Escreve o vector
+// Parametros: solucao
+void escreve_vect(int *sol, int m)
+{
+	int i;
+    printf("\nVector: ");
+    for(i=0; i<m; i++)
+        printf("%2d ", sol[i]);
+}
+
+
 // Copia vector b para a (tamanho n)
 void copia(int a[], int b[], int n)
 {
