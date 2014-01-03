@@ -267,12 +267,12 @@ void binary_tournament(pchrom pop, struct info d, pchrom parents)
 }
 
 
-// Seleccao por torneio binaria (tamanho de torneio: 2)
+// Seleccao por torneio de tamanho t_size
 // Argumentos: populacao actual, parametros, pais
 // A funcao preenche o vector pais de acordo com o resultados dos torneios
 void sized_tournament(pchrom pop, struct info d, pchrom parents)
 {
-	int i,j,min;
+	int i,j,max;
     
 	int* xvect = malloc(sizeof(int) * d.t_size);
 	if (!xvect) return;
@@ -285,15 +285,15 @@ void sized_tournament(pchrom pop, struct info d, pchrom parents)
 			xvect[j] = random_l_h(0, d.popsize-1);
 		}
         
-		min = xvect[0];
+		max = xvect[0];
 		for (j=1; j<d.t_size; j++)
 		{
-			// Problema de minimizacao: só sai um pai
-			if ((pop+xvect[j])->fitness < (pop+min)->fitness)
-				min = xvect[j];
+			// Problema de maximizacao: só sai um pai
+			if ((pop+xvect[j])->fitness > (pop+max)->fitness)
+				max = xvect[j];
 		}
         
-        atribuicao(parents + i,pop + min,d);
+        atribuicao(parents + i,pop + max,d);
 	}
     
 	free(xvect);
