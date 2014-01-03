@@ -13,8 +13,6 @@ struct info {
     int g;
     int popsize;
     float pm_swap;
-	float pm_ins;
-	float pm_inv;
     float pr;
 	int t_size;
     int numGenerations;

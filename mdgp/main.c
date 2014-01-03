@@ -68,8 +68,6 @@ int main(int argc, char *argv[])
     parameters.numGenerations = 2500;
     parameters.popsize = 100;
     parameters.pm_swap = 0.1;
-    parameters.pm_ins = 0.9;
-	parameters.pm_inv = 0.9;
     parameters.pr = 0.0;
 	parameters.t_size = 4;
     
@@ -168,12 +166,7 @@ int main(int argc, char *argv[])
                 best_run = get_best(pop, parameters, best_run);
                 
                 // Reservar espaco para os pais
-                parents = malloc(sizeof(chrom) * parameters.popsize);
-                if (!parents)
-                {
-                    printf("Erro na alocacao de memoria\n");
-                    exit(1);
-                }
+                parents = init_parents(parameters);
                 
                 // Main evolutionary loop
                 while (gen_actual <= parameters.numGenerations)
@@ -203,15 +196,18 @@ int main(int argc, char *argv[])
                 mbf += best_run.fitness;
                 if (k == 0 || best_ever.fitness < best_run.fitness)
                 {
-                    copia(best_ever.sol, best_run.sol, m);
-                    best_ever.fitness = best_run.fitness;
+                    atribuicao(best_ever,best_run,parameters);
                 }
                 
                 // Libertar memoria
+                // Populacao
                 for (i=0; i<parameters.popsize; i++)
                     free(pop[i].sol);
-                free(parents);
                 free(pop);
+                // Pais
+                for (i=0; i<parameters.popsize; i++)
+                    free(parents[i].sol);
+                free(parents);
             }
             
             // Escreve resultados globais

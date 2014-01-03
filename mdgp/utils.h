@@ -23,12 +23,13 @@ int random_l_h(int min, int max);
 
 float rand_01();
 
+
 // Computação Evolucinaria
 
 pchrom init_pop(struct info d, int** dist);
-
+pchrom init_parents(struct info d);
 void evaluate(pchrom pop, struct info d, int** dist);
-
 chrom get_best(pchrom pop, struct info d, chrom best);
 
+void atribuicao(chrom a, chrom b, struct info d);
 int flip();

@@ -196,7 +196,7 @@ void swap(int *a, int *b)
 }
 
 // Criacao da populacao inicial. O vector e alocado dinamicamente
-// Argumento: Estrutura com parametros
+// Argumento: Estrutura com parametros, Matriz de Distancias
 // Devolve o vector com a populacao
 pchrom init_pop(struct info d, int** dist)
 {
@@ -228,6 +228,36 @@ pchrom init_pop(struct info d, int** dist)
 	return p;
 }
 
+// Criacao dos pais. O vector e alocado dinamicamente
+// Argumento: Estrutura com parametros
+// Devolve o vector com para os pais
+pchrom init_parents(struct info d)
+{
+    int i;
+    pchrom parents = malloc(sizeof(chrom) * d.popsize);
+    
+    if (!parents)
+    {
+        printf("Erro na alocacao de memoria\n");
+        exit(1);
+    }
+    for (i=0; i<d.popsize; i++)
+    {
+        // Colunas de cada linha
+        parents[i].sol = (int*)calloc(d.m,sizeof(int));
+        if (!parents[i].sol)
+        {
+            printf("Erro na alocacao de memoria para linha %d\n",i);
+            exit(1);
+        }
+        // Inicializa
+        parents[i].fitness = 0;
+    }
+    return parents;
+}
+
+// Avaliar cada solucao da populacao.
+// Argumento: Populacao, Estrutura com parametros, Matriz de Distancias
 void evaluate(pchrom pop, struct info d, int** dist)
 {
 	int i;
@@ -247,6 +277,13 @@ chrom get_best(pchrom pop, struct info d, chrom best)
 			best = pop[i];
 	}
 	return best;
+}
+
+// Igualar uma solucao de uma populacao
+void atribuicao(chrom a, chrom b, struct info d)
+{
+    copia(a.sol, b.sol, d.m);
+    a.fitness = b.fitness;
 }
 
 // Simula o lancamento de uma moeda

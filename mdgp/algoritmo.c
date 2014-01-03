@@ -252,13 +252,17 @@ void binary_tournament(pchrom pop, struct info d, pchrom parents)
 		x1 = random_l_h(0, d.popsize-1);
 		do
 			x2 = random_l_h(0, d.popsize-1);
-		while(x1==x2);
+		while (x1==x2);
         
         // Problema de maximizacao
-		if((pop+x1)->fitness < (pop+x2)->fitness)
-			*(parents + i) = *(pop + x2);
+		if ((pop+x1)->fitness < (pop+x2)->fitness)
+        {
+            atribuicao(*(parents + i),*(pop + x2),d);
+        }
 		else
-			*(parents + i) = *(pop + x1);
+        {
+            atribuicao(*(parents + i),*(pop + x1),d);
+        }
 	}
 }
 
@@ -270,10 +274,10 @@ void sized_tournament(pchrom pop, struct info d, pchrom parents)
 {
 	int i,j,min;
     
-	int* xvect = malloc(sizeof(int)*d.t_size);
+	int* xvect = malloc(sizeof(int) * d.t_size);
 	if (!xvect) return;
     
-	for(i=0; i<d.popsize; i++)
+	for (i=0; i<d.popsize; i++)
 	{
 		for(j=0; j<d.t_size; j++)
 		{
@@ -282,14 +286,14 @@ void sized_tournament(pchrom pop, struct info d, pchrom parents)
 		}
         
 		min = xvect[0];
-		for(j=1; j<d.t_size; j++)
+		for (j=1; j<d.t_size; j++)
 		{
 			// Problema de minimizacao: só sai um pai
-			if((pop+xvect[j])->fitness < (pop+min)->fitness)
+			if ((pop+xvect[j])->fitness < (pop+min)->fitness)
 				min = xvect[j];
 		}
         
-		*(parents + i) = *(pop + min);
+        atribuicao(*(parents + i),*(pop + min),d);
 	}
     
 	free(xvect);
@@ -315,15 +319,12 @@ void recombination(pchrom parents, struct info d, pchrom offspring)
 	{
 		if(rand_01() < d.pr)
 		{
-			//cx_order((parents+i)->sol, (parents+i+1)->sol, (offspring+i)->sol, (offspring+i+1)->sol, d);
-			//*(offspring+i) = *(parents+i);
-			//*(offspring+i+1) = *(parents+i+1);
+			cx_order((parents+i)->sol, (parents+i+1)->sol, (offspring+i)->sol, (offspring+i+1)->sol, d);
 		}
 		else
 		{
-            //Mantem
-			*(offspring+i) = *(parents+i);
-			*(offspring+i+1) = *(parents+i+1);
+            atribuicao(*(offspring + i),*(parents + i),d);
+            atribuicao(*(offspring + i +1),*(parents + i +1),d);
 		}
 		(offspring+i)->fitness = (offspring+i+1)->fitness = 0;
 	}
@@ -339,7 +340,7 @@ void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
     tab1 = calloc(d.m,sizeof(int));
     tab2 = calloc(d.m,sizeof(int));
     
-	// seleccao dos pontos de corte
+	// Seleccao dos pontos de corte
 	point1 = random_l_h(0, d.m-1);
 	do {
 		point2 = random_l_h(0, d.m-1);
@@ -352,7 +353,7 @@ void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
 		point2 = i;
 	}
     
-	//copia das seccoes internas
+	// Copia das seccoes internas
 	for (i = point1; i<=point2; i++)
 	{
 		d1[i] = p1[i];
@@ -361,7 +362,7 @@ void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
 		tab2[p2[i]] = 1;
 	}
 	
-	// preencher o resto do descendente 1
+	// Preencher o resto do descendente 1
 	index = (point2+1) % d.m;
 	for (i=point2+1; i<d.m; i++)
 	{
@@ -380,7 +381,7 @@ void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
 		}
 	}
     
-	// preencher o resto do descendente 1
+	// Preencher o resto do descendente 1
 	index = (point2+1) % d.m;
 	for (i=point2+1; i<d.m; i++)
 	{
@@ -399,6 +400,7 @@ void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
 		}
 	}
     
+    // Liberta memória
     free(tab1);
     free(tab2);
 }
