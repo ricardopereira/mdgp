@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
 {
     enum TipoAlgoritmo algoritmo;
     char nome_fich[100];
+    char nome_alg[100];
     int *sol, *best;
     int** dist;
     int m, g, num_iter, k, i, runs, custo, custo_best = 0;
@@ -31,7 +32,6 @@ int main(int argc, char *argv[])
 	int gen_actual;
 	chrom best_run, best_ever;
     pchrom pop = NULL, parents = NULL;
-
 
 	if(argc == 3)
 	{
@@ -88,9 +88,13 @@ int main(int argc, char *argv[])
     switch (algoritmo)
     {
         case algTrepaColinas:
+            strcpy(nome_alg, "Trepa Colinas");
         case algTrepaColinasProb:
+            strcpy(nome_alg, "Trepa Colinas probabilistico");
         case algRecristalizacaoSimulada:
+            strcpy(nome_alg, "Recristalizacao simulada");
         case algTabu:
+            strcpy(nome_alg, "Tabu");
             sol = calloc(m,sizeof(int));
             best = calloc(m,sizeof(int));
             
@@ -152,7 +156,7 @@ int main(int argc, char *argv[])
             break;
             
         case algGeneticoPorTorneio:
-            
+            strcpy(nome_alg, "Genetico por torneio");
             best_ever.sol = calloc(m,sizeof(int));
             
             // Repeticoes
@@ -214,7 +218,7 @@ int main(int argc, char *argv[])
             printf("\nMelhor solucao encontrada");
             escreve_sol(best_ever.sol, m, g);
             printf("Custo final: %2d\n", best_ever.fitness);
-            
+            write_to_file(nome_alg,nome_fich,best_ever.sol, m, g,best_ever.fitness,mbf/k);
             free(best_ever.sol);
             break;
     }

@@ -35,3 +35,6 @@ chrom get_best(pchrom pop, struct info d, chrom best);
 
 void atribuicao(pchrom a, pchrom b, struct info d);
 int flip();
+
+//files
+int write_to_file(char const *nomealg,char *nomefich,int *sol, int m, int g,int custo,float mbf);

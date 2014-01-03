@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 #include "algoritmo.h"
 #include "utils.h"
@@ -305,4 +306,35 @@ int flip()
 	
 	else
 		return 1;
+}
+
+int write_to_file(char const *nome_alg,char *nomefich, int *sol, int m, int g,int custo,float mbf)
+{
+    char filename[100];
+    int i, subc;
+    time_t timenow;
+    FILE *f;
+    strcpy(filename,nome_alg);
+    timenow = time(NULL);
+    strcat(filename,asctime(localtime(&timenow)));
+    strcat(filename,".csv");
+    f= fopen(filename, "w");
+    
+    if (f == NULL) return -1;
+    fprintf(f,"Algoritmo:;%s\n", nome_alg);
+    fprintf(f,"Ficheiro:;%s\n\n", nomefich);
+    fprintf(f, "MBF:;%f",mbf);
+    
+    for (subc=0; subc<g; subc++)
+    {
+        fprintf(f,"\nConjunto %d: ",subc+1);
+        for(i=0; i<m; i++)
+            if(sol[i] == subc)
+                fprintf(f,";%2d  ", i);
+    }
+    fprintf(f,"\n");
+    
+    fprintf(f, "Custo final:;%d\n", custo);
+    fclose(f);
+    return 0; 
 }
