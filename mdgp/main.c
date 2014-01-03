@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
                         break;
                     case algTrepaColinasProb:
                         // Trepa colinas probabilístico
-                        //custo = tc_prob(sol, grafo, vert, num_iter);
+                        custo = tc_prob(sol, dist, m, g, num_iter);
                         break;
                     case algRecristalizacaoSimulada:
                         // Trepa colinas Recristalização Simulada
@@ -182,10 +182,11 @@ int main(int argc, char *argv[])
                     //binary_tournament(pop, parameters, parents);
                     sized_tournament(pop, parameters, parents);
                     
-                    // ToDo - reparacao
-                    
                     // Aplicar operadores geneticos aos pais (os descendentes ficam armazenados no vector pop)
-                    //genetic_operators(parents, parameters, pop);
+                    genetic_operators(parents, parameters, pop);
+                    
+                    // ToDo - reparacao
+
                     evaluate(pop, parameters, dist);
                     
                     // Actualizar a melhor solucao encontrada

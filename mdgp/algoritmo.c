@@ -195,7 +195,7 @@ int tc_simulated_annealing(int sol[], int **mat, int m, int g, int num_iter)
     temperatura = TMAX;
     for(i=0; i<num_iter; i++) {
         // Gera vizinho
-        gera_vizinho(sol, nova_sol, m);    
+        gera_vizinho(sol, nova_sol, m);
         // Avalia vizinho
         custo_viz = calcula_fit(nova_sol, mat, m, g);  
         // Calcular probabilidade
@@ -311,8 +311,8 @@ void recombination(pchrom parents, struct info d, pchrom offspring)
 		if(rand_01() < d.pr)
 		{
 			//cx_order((parents+i)->sol, (parents+i+1)->sol, (offspring+i)->sol, (offspring+i+1)->sol, d);
-			*(offspring+i) = *(parents+i);
-			*(offspring+i+1) = *(parents+i+1);
+			//*(offspring+i) = *(parents+i);
+			//*(offspring+i+1) = *(parents+i+1);
 		}
 		else
 		{
@@ -328,7 +328,74 @@ void recombination(pchrom parents, struct info d, pchrom offspring)
 // Argumentos: pai1, pai2, descendente1, descendente2, estrutura com parametros
 void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
 {
-
+	int* tab1, *tab2;
+	int point1, point2, index, i;
+    
+    tab1 = calloc(d.m,sizeof(int));
+    tab2 = calloc(d.m,sizeof(int));
+    
+	// seleccao dos pontos de corte
+	point1 = random_l_h(0, d.m-1);
+	do {
+		point2 = random_l_h(0, d.m-1);
+	} while(point1 == point2);
+    
+	if (point1 > point2)
+	{
+		i = point1;
+		point1 = point2;
+		point2 = i;
+	}
+    
+	//copia das seccoes internas
+	for (i = point1; i<=point2; i++)
+	{
+		d1[i] = p1[i];
+		tab1[p1[i]] = 1;
+		d2[i] = p2[i];
+		tab2[p2[i]] = 1;
+	}
+	
+	// preencher o resto do descendente 1
+	index = (point2+1) % d.m;
+	for (i=point2+1; i<d.m; i++)
+	{
+		if (tab1[p2[i]] == 0)
+		{
+			d1[index] = p2[i];
+			index = (index+1) % d.m;
+		}
+	}
+	for (i=0; i<=point2; i++)
+	{
+		if(tab1[p2[i]] == 0)
+		{
+			d1[index] = p2[i];
+			index = (index+1) % d.m;
+		}
+	}
+    
+	// preencher o resto do descendente 1
+	index = (point2+1) % d.m;
+	for (i=point2+1; i<d.m; i++)
+	{
+		if (tab2[p1[i]] == 0)
+		{
+			d2[index] = p1[i];
+			index = (index+1) % d.m;
+		}
+	}
+	for (i=0; i<=point2; i++)
+	{
+		if (tab2[p1[i]] == 0)
+		{
+			d2[index] = p1[i];
+			index = (index+1) % d.m;
+		}
+	}
+    
+    free(tab1);
+    free(tab2);
 }
 
 // Chama as funcoes que implementam as operacoes de mutacao (de acordo com as respectivas probabilidades)
@@ -338,16 +405,10 @@ void mutation(struct info d, pchrom offspring)
 {
 	int i;
     
-	for(i=0; i<d.popsize; i++)
+	for (i=0; i<d.popsize; i++)
 	{
-		if(rand_01() < d.pm_swap)
+		if (rand_01() < d.pm_swap)
 			mutation_swap(d, (offspring+i)->sol);
-        
-		// Functions nao implementadas
-		//if(rand_01() < d.pm_ins)
-		//	mutation_ins(d, (offspring+i)->sol);
-		//if(rand_01() < d.pm_inv)
-		//	mutation_inv(d, (offspring+i)->sol);
 	}
 }
 
@@ -366,17 +427,4 @@ void mutation_swap(struct info d, int a[])
 	z=a[x];
 	a[x]=a[y];
 	a[y]=z;
-}
-
-
-// Insertion mutation
-void mutation_ins(struct info d, int a[])
-{
-	printf("Nao implementada\n");
-}
-
-// Inversion mutation
-void mutation_inv(struct info d, int a[])
-{
-	printf("Nao implementada\n");
 }
