@@ -308,7 +308,7 @@ int flip()
 		return 1;
 }
 
-int write_to_file(char const *nome_alg,char *nomefich, int *sol, int m, int g,int custo,float mbf)
+int write_to_file(char const *nome_alg,char *nomefich, int *sol, int m, int g,int custo,float mbf,struct info param, int numiter)
 {
     char filename[100];
     int i, subc;
@@ -323,6 +323,15 @@ int write_to_file(char const *nome_alg,char *nomefich, int *sol, int m, int g,in
     if (f == NULL) return -1;
     fprintf(f,"Algoritmo:;%s\n", nome_alg);
     fprintf(f,"Ficheiro:;%s\n\n", nomefich);
+    fprintf(f,"Parametros\n");
+    fprintf(f,"num iter:;%d\n", numiter);
+    fprintf(f,"num descidas TABU:;%d\n",param.numTabuDescidas);
+    fprintf(f,"num generations:;%d\n",param.numGenerations);
+    fprintf(f,"pop size:;%d\n",param.popsize);
+    fprintf(f,"pm swap:;%f\n",param.pm_swap);
+    fprintf(f,"pr:;%f\n",param.pr);
+    fprintf(f,"t size:;%d\n\n",param.t_size);
+    
     fprintf(f, "MBF:;%f",mbf);
     
     for (subc=0; subc<g; subc++)

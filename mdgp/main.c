@@ -59,8 +59,8 @@ int main(int argc, char *argv[])
 	init_rand();
     
     // Configuracao
-    algoritmo = algGeneticoPorTorneio;
-    num_iter = 1000;
+    algoritmo = algTrepaColinas;
+    num_iter = 10;
     if(argc==4)
         parameters.numTabuDescidas = atoi(argv[3]);
     else
@@ -88,13 +88,9 @@ int main(int argc, char *argv[])
     switch (algoritmo)
     {
         case algTrepaColinas:
-            strcpy(nome_alg, "Trepa Colinas");
         case algTrepaColinasProb:
-            strcpy(nome_alg, "Trepa Colinas probabilistico");
         case algRecristalizacaoSimulada:
-            strcpy(nome_alg, "Recristalizacao simulada");
         case algTabu:
-            strcpy(nome_alg, "Tabu");
             sol = calloc(m,sizeof(int));
             best = calloc(m,sizeof(int));
             
@@ -113,18 +109,22 @@ int main(int argc, char *argv[])
                 {
                     case algTrepaColinas:
                         // Trepa colinas simples
+                        strcpy(nome_alg, "Trepa Colinas");
                         custo = trepa_colinas(sol, dist, m, g, num_iter);
                         break;
                     case algTrepaColinasProb:
                         // Trepa colinas probabilístico
+                        strcpy(nome_alg, "Trepa Colinas probabilistico");
                         custo = tc_prob(sol, dist, m, g, num_iter);
                         break;
                     case algRecristalizacaoSimulada:
                         // Trepa colinas Recristalização Simulada
+                        strcpy(nome_alg, "Recristalizacao simulada");
                         custo = tc_simulated_annealing(sol, dist, m, g, num_iter);
                         break;
                     case algTabu:
                         // Tabu
+                        strcpy(nome_alg, "Tabu");
                         custo = tabu_Search(sol, dist, m, g, num_iter, parameters.numTabuDescidas, 1);
                         break;
                     default:
@@ -149,7 +149,8 @@ int main(int argc, char *argv[])
             printf("\nMelhor solucao encontrada");
             escreve_sol(best, m, g);
             printf("Custo final: %2d\n", custo_best);
-            
+            // Escreve resultado globais para ficheiro
+            write_to_file(nome_alg,nome_fich,best, m, g,custo_best,mbf/k,parameters,num_iter);
             // Libertar memoria
             free(sol);
             free(best);
@@ -218,7 +219,8 @@ int main(int argc, char *argv[])
             printf("\nMelhor solucao encontrada");
             escreve_sol(best_ever.sol, m, g);
             printf("Custo final: %2d\n", best_ever.fitness);
-            write_to_file(nome_alg,nome_fich,best_ever.sol, m, g,best_ever.fitness,mbf/k);
+            // Escreve resultado globais para ficheiro
+            write_to_file(nome_alg,nome_fich,best_ever.sol, m, g,best_ever.fitness,mbf/k,parameters,num_iter);
             free(best_ever.sol);
             break;
     }
