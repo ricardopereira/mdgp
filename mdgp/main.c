@@ -120,6 +120,7 @@ int main(int argc, char *argv[])
                         custo = tc_simulated_annealing(sol, dist, m, g, num_iter);
                         break;
                     case algTabu:
+                        // Tabu
                         custo = tabu_Search(sol, dist, m, g, num_iter, parameters.numTabuDescidas, 1);
                         break;
                     default:
@@ -196,7 +197,7 @@ int main(int argc, char *argv[])
                 mbf += best_run.fitness;
                 if (k == 0 || best_ever.fitness < best_run.fitness)
                 {
-                    atribuicao(best_ever,best_run,parameters);
+                    atribuicao(&best_ever,&best_run,parameters);
                 }
                 
                 // Libertar memoria

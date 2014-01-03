@@ -257,11 +257,11 @@ void binary_tournament(pchrom pop, struct info d, pchrom parents)
         // Problema de maximizacao
 		if ((pop+x1)->fitness < (pop+x2)->fitness)
         {
-            atribuicao(*(parents + i),*(pop + x2),d);
+            atribuicao(parents + i,pop + x2,d);
         }
 		else
         {
-            atribuicao(*(parents + i),*(pop + x1),d);
+            atribuicao(parents + i,pop + x1,d);
         }
 	}
 }
@@ -293,7 +293,7 @@ void sized_tournament(pchrom pop, struct info d, pchrom parents)
 				min = xvect[j];
 		}
         
-        atribuicao(*(parents + i),*(pop + min),d);
+        atribuicao(parents + i,pop + min,d);
 	}
     
 	free(xvect);
@@ -323,8 +323,8 @@ void recombination(pchrom parents, struct info d, pchrom offspring)
 		}
 		else
 		{
-            atribuicao(*(offspring + i),*(parents + i),d);
-            atribuicao(*(offspring + i +1),*(parents + i +1),d);
+            atribuicao(offspring + i,parents + i,d);
+            atribuicao(offspring + i +1,parents + i +1,d);
 		}
 		(offspring+i)->fitness = (offspring+i+1)->fitness = 0;
 	}

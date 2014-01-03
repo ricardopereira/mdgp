@@ -280,10 +280,10 @@ chrom get_best(pchrom pop, struct info d, chrom best)
 }
 
 // Igualar uma solucao de uma populacao
-void atribuicao(chrom a, chrom b, struct info d)
+void atribuicao(pchrom a, pchrom b, struct info d)
 {
-    copia(a.sol, b.sol, d.m);
-    a.fitness = b.fitness;
+    copia(a->sol, b->sol, d.m);
+    a->fitness = b->fitness;
 }
 
 // Simula o lancamento de uma moeda
