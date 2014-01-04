@@ -16,7 +16,7 @@ enum TipoAlgoritmo
 };
 
 #define DEFAULT_RUNS 10
-#define DEFAULT_FILE "RanInt_n012_ss_01.txt"
+#define DEFAULT_FILE "RanInt_n010_ss_01.txt"
 
 int main(int argc, char *argv[])
 {
@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
         parameters.numTabuDescidas = 5;
     parameters.numGenerations = 2500;
     parameters.popsize = 100;
-    parameters.pm_swap = 0.01;
+    parameters.pm_swap = 0.0001;
     parameters.pr = 0.8;
 	parameters.t_size = 3;
     

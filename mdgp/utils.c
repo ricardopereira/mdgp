@@ -207,6 +207,15 @@ void swap(int *a, int *b)
     *b=x;
 }
 
+int igual(int a[], int b[], int m)
+{
+    int i;
+    for (i=0; i<m; i++)
+        if (a[i] != b[i])
+            return 0;
+    return 1;
+}
+
 // Criacao da populacao inicial. O vector e alocado dinamicamente
 // Argumento: Estrutura com parametros, Matriz de Distancias
 // Devolve o vector com a populacao

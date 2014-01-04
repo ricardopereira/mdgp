@@ -17,6 +17,8 @@ void copia(int a[], int b[], int n);
 
 void troca(int *sol, int a, int b);
 
+int igual(int a[], int b[], int m);
+
 // Random
 
 void init_rand();

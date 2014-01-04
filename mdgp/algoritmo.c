@@ -439,6 +439,9 @@ void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
         conj[d1[i]]++;
         
         //Teste
+        //printf("\nTabs");
+        //escreve_vect(tab1, d.m);
+        //escreve_vect(tab2, d.m);
         //printf("\nMemory");
         //escreve_vect(conj, d.g);
         //fflush(0);
