@@ -16,7 +16,7 @@ enum TipoAlgoritmo
 };
 
 #define DEFAULT_RUNS 10
-#define DEFAULT_FILE "RanInt_n012_ss_01.txt"
+#define DEFAULT_FILE "RanInt_n010_ss_01.txt"
 
 int main(int argc, char *argv[])
 {
@@ -59,8 +59,8 @@ int main(int argc, char *argv[])
 	init_rand();
     
     // Configuracao
-    algoritmo = algGeneticoPorTorneio;
-    num_iter = 10;
+    algoritmo = algTrepaColinas;
+    num_iter = 1000;
     if (argc == 4)
         parameters.numTabuDescidas = atoi(argv[3]);
     else

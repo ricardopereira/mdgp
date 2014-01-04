@@ -26,6 +26,37 @@ void gera_vizinho(int a[], int b[], int n)
     troca(b, p1, p2);
 }
 
+void gera_vizinho_afastado(int a[], int b[], int n)
+{
+    int p1, p2;
+    
+    copia(b,a,n);
+    
+    // Primeira troca
+	// Elemento a trocar
+    p1=random_l_h(0, n-1);
+    
+	// Encontra posicao com valor 0
+    do
+        p2=random_l_h(0, n-1);
+    while (b[p2] == a[p1]);
+    
+	// Troca
+    troca(b, p1, p2);
+    
+    // Segunda troca
+	// Elemento a trocar
+    p1=random_l_h(0, n-1);
+    
+	// Encontra posicao com valor 0
+    do
+        p2=random_l_h(0, n-1);
+    while (b[p2] == a[p1]);
+    
+	// Troca
+    troca(b, p1, p2);
+}
+
 // Trepa colinas first-choice
 // Parametros: solucao, matriz de adjacencias, numero de vertices e numero de iteracoes
 // Devolve o custo da melhor solucao encontrada
