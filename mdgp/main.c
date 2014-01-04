@@ -16,7 +16,7 @@ enum TipoAlgoritmo
 };
 
 #define DEFAULT_RUNS 10
-#define DEFAULT_FILE "RanInt_n010_ss_01.txt"
+#define DEFAULT_FILE "RanInt_n012_ss_01.txt"
 
 int main(int argc, char *argv[])
 {
@@ -65,11 +65,11 @@ int main(int argc, char *argv[])
         parameters.numTabuDescidas = atoi(argv[3]);
     else
         parameters.numTabuDescidas = 5;
-    parameters.numGenerations = 2500;
+    parameters.numGenerations = 200;
     parameters.popsize = 100;
     parameters.pm_swap = 0.0001;
     parameters.pr = 0.8;
-	parameters.t_size = 2;
+	parameters.t_size = 3;
     
     // Preenche matriz de distancias
     dist = init_dados(nome_fich, &m, &g);
@@ -181,7 +181,7 @@ int main(int argc, char *argv[])
                 while (gen_actual <= parameters.numGenerations)
                 {
                     // Torneio binario para encontrar os progenitores (ficam armazenados no vector parents)
-                    binary_tournament(pop, parameters, parents);
+                    sized_tournament(pop, parameters, parents);
                     
                     // Aplicar operadores geneticos aos pais (os descendentes ficam armazenados no vector pop)
                     genetic_operators(parents, parameters, pop, dist);
