@@ -316,29 +316,38 @@ int flip()
 		return 1;
 }
 
-int write_to_file(char const *nome_alg,char *nomefich, int *sol, int m, int g,int custo,float mbf,struct info param, int numiter)
+int write_to_file(char const *nome_alg,char *nomefich, int *sol, int m, int g,int custo,float mbf,struct info param, int numiter,int flagenum, double elapsed)
 {
     char filename[100];
     int i, subc;
-    time_t timenow;
+    
     FILE *f;
     strcpy(filename,nome_alg);
-    timenow = time(NULL);
-    strcat(filename,asctime(localtime(&timenow)));
     strcat(filename,".csv");
-    f= fopen(filename, "w");
+    f= fopen(filename, "a");
+    
     
     if (f == NULL) return -1;
-    fprintf(f,"Algoritmo:;%s\n", nome_alg);
-    fprintf(f,"Ficheiro:;%s\n\n", nomefich);
-    fprintf(f,"Parametros\n");
+    if(numiter==10)
+    {
+        fprintf(f,"Algoritmo:;%s\n", nome_alg);
+        fprintf(f,"Ficheiro:;%s\n", nomefich);
+    }
+    
+    fprintf(f,"\nParametros\n");
     fprintf(f,"num iter:;%d\n", numiter);
-    fprintf(f,"num descidas TABU:;%d\n",param.numTabuDescidas);
-    fprintf(f,"num generations:;%d\n",param.numGenerations);
-    fprintf(f,"pop size:;%d\n",param.popsize);
-    fprintf(f,"pm swap:;%f\n",param.pm_swap);
-    fprintf(f,"pr:;%f\n",param.pr);
-    fprintf(f,"t size:;%d\n\n",param.t_size);
+    if (flagenum==1)
+    {
+        fprintf(f,"num descidas TABU:;%d\n",param.numTabuDescidas);
+    }
+    if (flagenum==2)
+    {
+        fprintf(f,"num generations:;%d\n",param.numGenerations);
+        fprintf(f,"pop size:;%d\n",param.popsize);
+        fprintf(f,"pm swap:;%f\n",param.pm_swap);
+        fprintf(f,"pr:;%f\n",param.pr);
+        fprintf(f,"t size:;%d\n\n",param.t_size);
+    }
     
     fprintf(f, "MBF:;%f",mbf);
     
@@ -352,6 +361,8 @@ int write_to_file(char const *nome_alg,char *nomefich, int *sol, int m, int g,in
     fprintf(f,"\n");
     
     fprintf(f, "Custo final:;%d\n", custo);
+    
+    fprintf(f, "Segundos decorridos:;%f\n", elapsed);
     fclose(f);
-    return 0; 
+    return 0;
 }

@@ -39,4 +39,4 @@ void atribuicao(pchrom a, chrom b, struct info d);
 int flip();
 
 //files
-int write_to_file(char const *nomealg,char *nomefich,int *sol, int m, int g,int custo,float mbf,struct info param, int numiter);
+int write_to_file(char const *nomealg,char *nomefich,int *sol, int m, int g,int custo,float mbf,struct info param, int numiter,int flagenum,double elapsed);
