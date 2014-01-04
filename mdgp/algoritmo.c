@@ -517,7 +517,7 @@ void mutation_swap(struct info d, int a[])
 	x=random_l_h(0,	d.m-1);
 	do {
 		y=random_l_h(0, d.m-1);
-    } while (x==y);
+    } while (x == y || a[x] == a[y]);
     
 	z=a[x];
 	a[x]=a[y];

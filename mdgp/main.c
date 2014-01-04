@@ -65,11 +65,11 @@ int main(int argc, char *argv[])
         parameters.numTabuDescidas = atoi(argv[3]);
     else
         parameters.numTabuDescidas = 5;
-    parameters.numGenerations = 2500;
-    parameters.popsize = 100;
+    parameters.numGenerations = 5000;
+    parameters.popsize = 1000;
     parameters.pm_swap = 0.0001;
     parameters.pr = 0.8;
-	parameters.t_size = 3;
+	parameters.t_size = 2;
     
     // Preenche matriz de distancias
     dist = init_dados(nome_fich, &m, &g);
@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
             break;
             
         case algGeneticoPorTorneio:
-            //strcpy(nome_alg, "Genetico por torneio");
+            strcpy(nome_alg, "Genetico por torneio");
             best_ever.sol = calloc(m,sizeof(int));
             
             // Repeticoes
@@ -178,13 +178,14 @@ int main(int argc, char *argv[])
                 while (gen_actual <= parameters.numGenerations)
                 {
                     // Torneio binario para encontrar os progenitores (ficam armazenados no vector parents)
-                    sized_tournament(pop, parameters, parents);
+                    binary_tournament(pop, parameters, parents);
                     
                     // Aplicar operadores geneticos aos pais (os descendentes ficam armazenados no vector pop)
                     genetic_operators(parents, parameters, pop);
                     
                     // Reavaliar a qualidade da populacao
                     evaluate(pop, parameters, dist);
+                    
                     // Actualizar a melhor solucao encontrada
                     best_run = get_best(pop, parameters, best_run);
                     
