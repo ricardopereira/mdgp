@@ -201,11 +201,11 @@ int tc_simulated_annealing(int sol[], int **mat, int m, int g, int num_iter)
         gera_vizinho(sol, nova_sol, m);
         // Avalia vizinho
         custo_viz = calcula_fit(nova_sol, mat, m, g);  
-        // Calcular probabilidade
+        // Calcular probabilidade: maximizacao
         eprob = exp((custo-custo_viz)/temperatura);
 
         // Aceita vizinho se o custo diminuir (problema de maximizacao)
-        if(custo_viz > custo)
+        if (custo_viz >= custo) //= planicie
         {
             copia(sol, nova_sol, m);
             custo = custo_viz;
@@ -342,13 +342,27 @@ void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
     double r;
     
     tab1 = calloc(d.m,sizeof(int));
+    if (!tab1)
+    {
+        printf("Erro na alocacao de memoria");
+        exit(1);
+    }
     tab2 = calloc(d.m,sizeof(int));
+    if (!tab2)
+    {
+        printf("Erro na alocacao de memoria");
+        exit(1);
+    }
     conj = calloc(d.g,sizeof(int));
+    if (!conj)
+    {
+        printf("Erro na alocacao de memoria");
+        exit(1);
+    }
     
-    escreve_vect(p1, d.m);
-    escreve_sol(p1, d.m, d.g);
-    escreve_vect(p2, d.m);
-    escreve_sol(p2, d.m, d.g);
+    //Teste
+    //escreve_vect(p1, d.m);
+    //escreve_vect(p2, d.m);
 
     // Primeiro descendente
     i = 0;
@@ -363,73 +377,103 @@ void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
         if (r < prob)
         {
             // Verifica se ja ultrapassa do limite
-            if (conj[p1[i]] >= (d.m/d.g))
+            if (conj[p1[i]] >= (d.m/d.g) || tab1[i] == 1)
             {
-                // Ultimo
-                if (i == d.m-1)
-                    i = 0;
+                if (conj[p2[i]] >= (d.m/d.g) || tab2[i] == 1)
+                {
+                    // Ultimo
+                    if (i == d.m-1)
+                        i = 0;
+                    else
+                        i++;
+                    continue;
+                }
                 else
-                    i++;
-                continue;
+                {
+                    d1[aceites] = p2[i];
+                    tab2[i] = 1;
+                }
             }
-            
-            d1[i] = p1[i];
-            tab1[i] = 1;
+            else
+            {
+                d1[aceites] = p1[i];
+                tab1[i] = 1;
+            }
         }
         else
         {
             // Verifica se ja ultrapassa do limite
-            if (conj[p2[i]] >= (d.m/d.g))
+            if (conj[p2[i]] >= (d.m/d.g) || tab2[i] == 1)
             {
-                // Ultimo
-                if (i == d.m-1)
-                    i = 0;
+                if (conj[p1[i]] >= (d.m/d.g) || tab1[i] == 1)
+                {
+                    // Ultimo
+                    if (i == d.m-1)
+                        i = 0;
+                    else
+                        i++;
+                    continue;
+                }
                 else
-                    i++;
-                continue;
+                {
+                    d1[aceites] = p1[i];
+                    tab1[i] = 1;
+                }
             }
-            
-            d1[i] = p2[i];
-            tab2[i] = 1;
+            else
+            {
+                d1[aceites] = p2[i];
+                tab2[i] = 1;
+            }
         }
         conj[d1[i]]++;
         
-        printf("\nMemory");
-        escreve_vect(conj, d.g);
-        fflush(0);
+        //Teste
+        //printf("\nMemory");
+        //escreve_vect(conj, d.g);
+        //fflush(0);
         
         aceites++;
         i++;
     }
     
     //Teste
-    printf("\nFilho1");
-    escreve_vect(d1, d.m);
-    escreve_sol(d1, d.m, d.g);
+    //printf("\n\ndescendente1");
+    //escreve_vect(d1, d.m);
+    //escreve_sol(d1, d.m, d.g);
+    
+    //Teste
+    //printf("\nTabs");
+    //escreve_vect(tab1, d.m);
+    //escreve_vect(tab2, d.m);
+    //fflush(0);
     
     // Segundo descendente
     i = 0;
+    aceites = 0;
     while (i<d.m)
     {
         if (tab1[i] == 0)
         {
-            d2[i] = p1[i];
+            d2[aceites++] = p1[i];
         }
-        else if (tab2[i] == 0)
+        if (tab2[i] == 0)
         {
-            d2[i] = p2[i];
+            d2[aceites++] = p2[i];
         }
         i++;
     }
     
+    
     //Teste
-    printf("Filho2\n");
-    escreve_sol(d2, d.m, d.g);
+    //printf("\n\ndescendente2");
+    //escreve_vect(d2, d.m);
+    //escreve_sol(d2, d.m, d.g);
     
     // Liberta memória
+    free(conj);
     free(tab1);
     free(tab2);
-    free(conj);
 }
 
 // Chama as funcoes que implementam as operacoes de mutacao (de acordo com as respectivas probabilidades)
