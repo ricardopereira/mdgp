@@ -59,16 +59,16 @@ int main(int argc, char *argv[])
 	init_rand();
     
     // Configuracao
-    algoritmo = algTrepaColinas;
+    algoritmo = algGeneticoPorTorneio;
     num_iter = 1000;
     if (argc == 4)
         parameters.numTabuDescidas = atoi(argv[3]);
     else
         parameters.numTabuDescidas = 5;
-    parameters.numGenerations = 200;
+    parameters.numGenerations = 2100;
     parameters.popsize = 100;
-    parameters.pm_swap = 0.0001;
-    parameters.pr = 0.8;
+    parameters.pm_swap = 0.025;
+    parameters.pr = 0.25;
 	parameters.t_size = 3;
     
     // Preenche matriz de distancias

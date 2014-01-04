@@ -1,6 +1,107 @@
 MDGP:
 
 RanInt_n010_ss_01.txt: 1292.00 
+
+    parameters.numGenerations = 1000;
+    parameters.popsize = 100;
+    parameters.pm_swap = 0.0001;
+    parameters.pr = 0.75;
+	parameters.t_size = 3;
+
+
 RanInt_n012_ss_01.txt:  985.00
+
+    parameters.numGenerations = 2000;
+    parameters.popsize = 100;
+    parameters.pm_swap = 0.001;
+    parameters.pr = 0.75;
+	parameters.t_size = 3;
+
+
 RanInt_n030_ss_01.txt: Entre  5324.00 e 17084.75
+
+    parameters.numGenerations = 2000;
+    parameters.popsize = 100;
+    parameters.pm_swap = 0.0025;
+    parameters.pr = 0.65;
+	parameters.t_size = 3;
+
+
+
+
 RanInt_n060_ss_01.txt: Entre 18408.00 e 83352.74
+
+    parameters.numGenerations = 2100;
+    parameters.popsize = 100;
+    parameters.pm_swap = 0.0035;
+    parameters.pr = 0.40;
+	parameters.t_size = 3;
+
+MBF: 17572.000000
+
+Melhor solucao encontrada
+Conjunto 1:  9  12  16  34  40  49  56  57  58  59  
+Conjunto 2:  2   3   5  13  27  30  36  41  43  53  
+Conjunto 3:  0   1   4  10  11  14  25  45  47  54  
+Conjunto 4: 17  19  22  38  39  42  44  46  50  52  
+Conjunto 5:  6   8  18  23  24  26  31  33  37  51  
+Conjunto 6:  7  15  20  21  28  29  32  35  48  55  
+Custo final: 18174
+
+
+    parameters.numGenerations = 2100;
+    parameters.popsize = 100;
+    parameters.pm_swap = 0.005;
+    parameters.pr = 0.35;
+	parameters.t_size = 3;
+
+MBF: 17779.400391
+
+Melhor solucao encontrada
+Conjunto 1:  5   7  15  18  21  27  36  39  45  57  
+Conjunto 2:  1   2   4  23  25  30  33  37  41  53  
+Conjunto 3:  8   9  10  12  16  31  40  46  54  59  
+Conjunto 4:  3  17  28  34  42  48  49  51  56  58  
+Conjunto 5:  6  13  20  24  29  32  35  38  50  55  
+Conjunto 6:  0  11  14  19  22  26  43  44  47  52  
+Custo final: 18351
+
+
+    parameters.numGenerations = 2100;
+    parameters.popsize = 100;
+    parameters.pm_swap = 0.009;
+    parameters.pr = 0.25;
+	parameters.t_size = 3;
+
+MBF: 18117.699219
+
+Melhor solucao encontrada
+Conjunto 1:  0   2   6   7  22  23  29  37  39  52  
+Conjunto 2:  5  20  28  32  35  38  42  50  54  55  
+Conjunto 3:  1   3   4  11  13  24  25  43  45  51  
+Conjunto 4: 15  18  21  26  27  33  36  44  47  48  
+Conjunto 5:  8  10  12  17  19  30  31  41  46  53  
+Conjunto 6:  9  14  16  34  40  49  56  57  58  59  
+Custo final: 18430
+
+
+
+BEST - ajustar
+
+    parameters.numGenerations = 2100;
+    parameters.popsize = 100;
+    parameters.pm_swap = 0.025;
+    parameters.pr = 0.25;
+	parameters.t_size = 3;
+
+MBF: 18303.000000
+
+Melhor solucao encontrada
+Conjunto 1:  4   5  13  15  20  32  35  38  50  55  
+Conjunto 2:  7  11  14  17  19  22  29  39  46  58  
+Conjunto 3:  9  10  12  16  34  40  49  54  56  59  
+Conjunto 4:  2  18  21  23  27  36  42  48  53  57  
+Conjunto 5:  1   3   6  24  30  31  33  37  41  45  
+Conjunto 6:  0   8  25  26  28  43  44  47  51  52  
+Custo final: 18597
+Program ended with exit code: 0
