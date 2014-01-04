@@ -13,11 +13,12 @@ enum TipoAlgoritmo
     algTrepaColinasProb,
     algRecristalizacaoSimulada,
     algTabu,
-    algGeneticoPorTorneio
+    algGeneticoPorTorneio,
+    algHibrido
 };
 
 #define DEFAULT_RUNS 10
-#define DEFAULT_FILE "RanInt_n010_ss_01.txt"
+#define DEFAULT_FILE "RanInt_n060_ss_01.txt"
 
 int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info parameters);
 
@@ -62,7 +63,7 @@ int main(int argc, char *argv[])
 	init_rand();
     
     // Configuracao
-    algoritmo = algGeneticoPorTorneio;
+    algoritmo = algHibrido;
     num_iter = 1000;
     if (argc == 4)
         parameters.numTabuDescidas = atoi(argv[3]);
@@ -158,6 +159,7 @@ int main(int argc, char *argv[])
             break;
             
         case algGeneticoPorTorneio:
+        case algHibrido:
             strcpy(nome_alg, "Genetico por torneio");
             
             best_run.sol = calloc(m,sizeof(int));
@@ -194,6 +196,14 @@ int main(int argc, char *argv[])
                     get_best(pop, parameters, &best_run);
                     
                     gen_actual++;
+                }
+                
+                // HIBRIDO: tentar melhorar solução com pesquisa local
+                if (algoritmo == algHibrido)
+                {
+                    strcpy(nome_alg, "Genetico por torneio + trepa colinas");
+                    // Trepa colinas simples
+                    best_run.fitness = trepa_colinas(best_run.sol, dist, m, g, 1000/*?*/);
                 }
                 
                 // Escreve resultados da repeticao que terminou
