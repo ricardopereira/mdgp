@@ -57,6 +57,44 @@ void gera_vizinho_afastado(int a[], int b[], int n)
     troca(b, p1, p2);
 }
 
+// Gera o melhor de N vizinhos
+// Parametros: solucao actual, vizinho, numero de vertices
+void gera_vizinho_v2(int a[], int b[], int n, int g,int **mat)
+{
+    int p1, p2;
+    int *auxbfinal,*auxb;
+    int custoaux=0,custofinal=0;
+    int auxnum,numVizCalc=3;
+    
+    auxbfinal = malloc(sizeof(int)*n);
+    auxb = malloc(sizeof(int)*n);
+    copia(auxbfinal,a,n);
+    copia(auxb,a,n);
+    
+    for(auxnum=0;auxnum<numVizCalc;auxnum++)
+    {
+        // Elemento a trocar
+        p1=random_l_h(0, n-1);
+        
+        // Encontra posicao com valor 0
+        do
+            p2=random_l_h(0, n-1);
+        while (auxb[p2] == a[p1]);
+        
+        // Troca
+        troca(auxb, p1, p2);
+        
+        custoaux = calcula_fit(auxb, mat, n, g);
+        if(custoaux>custofinal)
+        {
+            custofinal = custoaux;
+            copia(auxbfinal, auxb, n);
+        }
+    }
+    
+    copia(b, auxbfinal, n);
+}
+
 // Trepa colinas first-choice
 // Parametros: solucao, matriz de adjacencias, numero de vertices e numero de iteracoes
 // Devolve o custo da melhor solucao encontrada
