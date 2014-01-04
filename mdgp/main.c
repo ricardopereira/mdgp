@@ -21,6 +21,7 @@ enum TipoAlgoritmo
 #define DEFAULT_FILE "RanInt_n060_ss_01.txt"
 
 int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info parameters);
+int tests();
 
 int main(int argc, char *argv[])
 {
@@ -83,6 +84,10 @@ int main(int argc, char *argv[])
     
     printf("Elementos: %d\n",m);
     printf("Sub-conjuntos: %d\n",g);
+    
+    
+    //testes
+    tests();
     
     // Confirmar valores da matriz
     //mostra_matriz(dist,m);
@@ -459,5 +464,152 @@ int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info p
     for (i=0; i<(m-1); i++)
         free(dist[i]);
     free(dist);
+    return 0;
+}
+
+int tests()
+{
+	struct info parameters;
+    char nome_fich[100];
+    
+    strcpy(nome_fich,"RanInt_n010_ss_01.txt");
+    workPCwork(algTrepaColinas, nome_fich, parameters);
+    workPCwork(algTrepaColinasProb, nome_fich, parameters);
+    parameters.numTabuDescidas = 3;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 2;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 1;
+    workPCwork(algTabu, nome_fich, parameters);
+    
+    strcpy(nome_fich,"RanInt_n010_ss_02.txt");
+    workPCwork(algTrepaColinas, nome_fich, parameters);
+    workPCwork(algTrepaColinasProb, nome_fich, parameters);
+    parameters.numTabuDescidas = 3;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 2;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 1;
+    workPCwork(algTabu, nome_fich, parameters);
+    
+    strcpy(nome_fich,"RanInt_n012_ss_01.txt");
+    workPCwork(algTrepaColinas, nome_fich, parameters);
+    workPCwork(algTrepaColinasProb, nome_fich, parameters);
+    parameters.numTabuDescidas = 3;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 2;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 1;
+    workPCwork(algTabu, nome_fich, parameters);
+    
+    strcpy(nome_fich,"RanInt_n012_ss_02.txt");
+    workPCwork(algTrepaColinas, nome_fich, parameters);
+    workPCwork(algTrepaColinasProb, nome_fich, parameters);
+    parameters.numTabuDescidas = 3;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 2;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 1;
+    workPCwork(algTabu, nome_fich, parameters);
+    
+    strcpy(nome_fich,"RanInt_n030_ss_01.txt");
+    workPCwork(algTrepaColinas, nome_fich, parameters);
+    workPCwork(algTrepaColinasProb, nome_fich, parameters);
+    parameters.numTabuDescidas = 3;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 2;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 1;
+    workPCwork(algTabu, nome_fich, parameters);
+    
+    strcpy(nome_fich,"RanInt_n030_ss_02.txt");
+    workPCwork(algTrepaColinas, nome_fich, parameters);
+    workPCwork(algTrepaColinasProb, nome_fich, parameters);
+    parameters.numTabuDescidas = 3;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 2;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 1;
+    workPCwork(algTabu, nome_fich, parameters);
+    
+    strcpy(nome_fich,"RanInt_n060_ss_01.txt");
+    workPCwork(algTrepaColinas, nome_fich, parameters);
+    workPCwork(algTrepaColinasProb, nome_fich, parameters);
+    parameters.numTabuDescidas = 3;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 2;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 1;
+    workPCwork(algTabu, nome_fich, parameters);
+    
+    strcpy(nome_fich,"RanInt_n060_ss_02.txt");
+    workPCwork(algTrepaColinas, nome_fich, parameters);
+    workPCwork(algTrepaColinasProb, nome_fich, parameters);
+    parameters.numTabuDescidas = 3;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 2;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 1;
+    workPCwork(algTabu, nome_fich, parameters);
+    
+    strcpy(nome_fich,"RanInt_n120_ss_01.txt");
+    workPCwork(algTrepaColinas, nome_fich, parameters);
+    workPCwork(algTrepaColinasProb, nome_fich, parameters);
+    parameters.numTabuDescidas = 3;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 2;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 1;
+    workPCwork(algTabu, nome_fich, parameters);
+    
+    strcpy(nome_fich,"RanInt_n120_ss_02.txt");
+    workPCwork(algTrepaColinas, nome_fich, parameters);
+    workPCwork(algTrepaColinasProb, nome_fich, parameters);
+    parameters.numTabuDescidas = 3;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 2;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 1;
+    workPCwork(algTabu, nome_fich, parameters);
+    
+    strcpy(nome_fich,"RanInt_n240_ss_01.txt");
+    workPCwork(algTrepaColinas, nome_fich, parameters);
+    workPCwork(algTrepaColinasProb, nome_fich, parameters);
+    parameters.numTabuDescidas = 3;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 2;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 1;
+    workPCwork(algTabu, nome_fich, parameters);
+    
+    strcpy(nome_fich,"RanInt_n240_ss_02.txt");
+    workPCwork(algTrepaColinas, nome_fich, parameters);
+    workPCwork(algTrepaColinasProb, nome_fich, parameters);
+    parameters.numTabuDescidas = 3;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 2;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 1;
+    workPCwork(algTabu, nome_fich, parameters);
+    
+    strcpy(nome_fich,"RanInt_n480_ss_01.txt");
+    workPCwork(algTrepaColinas, nome_fich, parameters);
+    workPCwork(algTrepaColinasProb, nome_fich, parameters);
+    parameters.numTabuDescidas = 3;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 2;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 1;
+    workPCwork(algTabu, nome_fich, parameters);
+    
+    strcpy(nome_fich,"RanInt_n480_ss_02.txt");
+    workPCwork(algTrepaColinas, nome_fich, parameters);
+    workPCwork(algTrepaColinasProb, nome_fich, parameters);
+    parameters.numTabuDescidas = 3;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 2;
+    workPCwork(algTabu, nome_fich, parameters);
+    parameters.numTabuDescidas = 1;
+    workPCwork(algTabu, nome_fich, parameters);
     return 0;
 }
