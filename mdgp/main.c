@@ -65,8 +65,8 @@ int main(int argc, char *argv[])
         parameters.numTabuDescidas = atoi(argv[3]);
     else
         parameters.numTabuDescidas = 5;
-    parameters.numGenerations = 5000;
-    parameters.popsize = 1000;
+    parameters.numGenerations = 2500;
+    parameters.popsize = 100;
     parameters.pm_swap = 0.0001;
     parameters.pr = 0.8;
 	parameters.t_size = 2;
@@ -158,6 +158,8 @@ int main(int argc, char *argv[])
             
         case algGeneticoPorTorneio:
             strcpy(nome_alg, "Genetico por torneio");
+            
+            best_run.sol = calloc(m,sizeof(int));
             best_ever.sol = calloc(m,sizeof(int));
             
             // Repeticoes
@@ -167,9 +169,10 @@ int main(int argc, char *argv[])
                 pop = init_pop(parameters, dist);
                 
                 gen_actual = 1;
-                best_run = pop[0];
+                atribuicao(&best_run, pop[0], parameters);
+
                 // Inicializar a melhor solucao encontrada
-                best_run = get_best(pop, parameters, best_run);
+                get_best(pop, parameters, &best_run);
                 
                 // Reservar espaco para os pais
                 parents = init_parents(parameters);
@@ -181,13 +184,13 @@ int main(int argc, char *argv[])
                     binary_tournament(pop, parameters, parents);
                     
                     // Aplicar operadores geneticos aos pais (os descendentes ficam armazenados no vector pop)
-                    genetic_operators(parents, parameters, pop);
+                    genetic_operators(parents, parameters, pop, dist);
                     
                     // Reavaliar a qualidade da populacao
                     evaluate(pop, parameters, dist);
                     
                     // Actualizar a melhor solucao encontrada
-                    best_run = get_best(pop, parameters, best_run);
+                    get_best(pop, parameters, &best_run);
                     
                     gen_actual++;
                 }
@@ -200,7 +203,7 @@ int main(int argc, char *argv[])
                 mbf += best_run.fitness;
                 if (k == 0 || best_ever.fitness < best_run.fitness)
                 {
-                    atribuicao(&best_ever,&best_run,parameters);
+                    atribuicao(&best_ever,best_run,parameters);
                 }
                 
                 // Libertar memoria
@@ -224,6 +227,7 @@ int main(int argc, char *argv[])
             // Escreve resultado globais para ficheiro
             //write_to_file(nome_alg,nome_fich,best_ever.sol, m, g,best_ever.fitness,mbf/k,parameters,num_iter);
             
+            free(best_run.sol);
             free(best_ever.sol);
             break;
     }

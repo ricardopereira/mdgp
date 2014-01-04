@@ -29,8 +29,8 @@ struct individual {
 
 void binary_tournament(pchrom pop, struct info d, pchrom parents);
 void sized_tournament(pchrom pop, struct info d, pchrom parents);
-void genetic_operators(pchrom parents, struct info d, pchrom offspring);
-void recombination(pchrom parents, struct info d, pchrom offspring);
+void genetic_operators(pchrom parents, struct info d, pchrom offspring, int** dist);
+void recombination(pchrom parents, struct info d, pchrom offspring, int** dist);
 void mutation(struct info d, pchrom offspring);
 void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d);
 void mutation_swap(struct info d, int a[]);

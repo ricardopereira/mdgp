@@ -33,9 +33,9 @@ float rand_01();
 pchrom init_pop(struct info d, int** dist);
 pchrom init_parents(struct info d);
 void evaluate(pchrom pop, struct info d, int** dist);
-chrom get_best(pchrom pop, struct info d, chrom best);
+void get_best(pchrom pop, struct info d, pchrom best);
 
-void atribuicao(pchrom a, pchrom b, struct info d);
+void atribuicao(pchrom a, chrom b, struct info d);
 int flip();
 
 //files

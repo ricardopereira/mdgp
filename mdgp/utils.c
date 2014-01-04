@@ -289,22 +289,21 @@ void evaluate(pchrom pop, struct info d, int** dist)
 // Actualiza a melhor solucao encontrada
 // Argumentos: populacao actual, estrutura com parametros e melhor solucao encontrada ate a geracao imediatamente anterior
 // Devolve a melhor solucao encontrada ate a geracao actual
-chrom get_best(pchrom pop, struct info d, chrom best)
+void get_best(pchrom pop, struct info d, pchrom best)
 {
 	int i;
 	for (i=0; i<d.popsize; i++)
 	{
-		if(best.fitness > pop[i].fitness)
-			best = pop[i];
+		if(best->fitness < pop[i].fitness)
+			atribuicao(best,pop[i],d);
 	}
-	return best;
 }
 
 // Igualar uma solucao de uma populacao
-void atribuicao(pchrom a, pchrom b, struct info d)
+void atribuicao(pchrom a, chrom b, struct info d)
 {
-    copia(a->sol, b->sol, d.m);
-    a->fitness = b->fitness;
+    copia(a->sol, b.sol, d.m);
+    a->fitness = b.fitness;
 }
 
 // Simula o lancamento de uma moeda

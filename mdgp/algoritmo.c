@@ -257,11 +257,11 @@ void binary_tournament(pchrom pop, struct info d, pchrom parents)
         // Problema de maximizacao
 		if ((pop+x1)->fitness < (pop+x2)->fitness)
         {
-            atribuicao(parents + i,pop + x2,d);
+            atribuicao(parents + i,*(pop + x2),d);
         }
 		else
         {
-            atribuicao(parents + i,pop + x1,d);
+            atribuicao(parents + i,*(pop + x1),d);
         }
 	}
 }
@@ -293,7 +293,7 @@ void sized_tournament(pchrom pop, struct info d, pchrom parents)
 				max = xvect[j];
 		}
         
-        atribuicao(parents + i,pop + max,d);
+        atribuicao(parents + i,*(pop + max),d);
 	}
     
 	free(xvect);
@@ -302,16 +302,16 @@ void sized_tournament(pchrom pop, struct info d, pchrom parents)
 
 // Operadores geneticos
 // Argumentos: pais, estrutura com parametros, descendentes
-void genetic_operators(pchrom parents, struct info d, pchrom offspring)
+void genetic_operators(pchrom parents, struct info d, pchrom offspring, int** dist)
 {
-	recombination(parents, d, offspring);
-	mutation(d, offspring);
+	recombination(parents, d, offspring, dist);
+	//mutation(d, offspring);
 }
 
 // Chama a funcao cx_order que implementa a recombinacao por ordem (com probabilidade pr)
 // Argumentos: pais, estrutura com parametros, descendentes
 // A funcao preenche o vector descendentes com o resultado das operacoes de crossover
-void recombination(pchrom parents, struct info d, pchrom offspring)
+void recombination(pchrom parents, struct info d, pchrom offspring, int** dist)
 {
 	int i;
     
@@ -325,9 +325,16 @@ void recombination(pchrom parents, struct info d, pchrom offspring)
 		else
 		{
             // Sem recombinacao
-            atribuicao(offspring + i,parents + i,d);
-            atribuicao(offspring + i +1,parents + i +1,d);
+            atribuicao(offspring + i,*(parents + i),d);
+            atribuicao(offspring + i +1,*(parents + i +1),d);
 		}
+        
+        //(offspring+i)->fitness = calcula_fit((offspring+i)->sol, dist, d.m, d.g);
+        //printf("\nFitness Filho 1: %d",(offspring+i)->fitness);
+        
+        //(offspring+i+1)->fitness = calcula_fit((offspring+i+1)->sol, dist, d.m, d.g);
+        //printf("\nFitness Filho 2: %d",(offspring+i+1)->fitness);
+        
 		(offspring+i)->fitness = (offspring+i+1)->fitness = 0;
 	}
 }
