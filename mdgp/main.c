@@ -258,7 +258,7 @@ int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info p
     int *sol, *best;
     int** dist;
     int m, g, num_iter, k, i,idx, runs, custo, custo_best = 0;
-	float mbf = 0.0;
+	float mbfaux=0.0,mbf = 0.0;
     double elapsed;
     // Evolutivo
 	int gen_actual;
@@ -280,6 +280,8 @@ int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info p
     num_iter = 1;
     for(idx=0;idx<4;idx++)
     {
+        mbf = 0.0;
+        custo_best= 0;
         start = clock();
         num_iter = num_iter*10;
         
@@ -357,16 +359,18 @@ int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info p
                 end = clock();
                 elapsed = (double)(end - start) / CLOCKS_PER_SEC;
                 // Escreve resultado globais para ficheiro
+                mbfaux = mbf/k;
                 if(algoritmo!=algTabu)
-                    write_to_file(nome_alg,nome_fich,best, m, g,custo_best,mbf/k,parameters,num_iter,0,elapsed);
+                    write_to_file(nome_alg,nome_fich,best, m, g,custo_best,mbfaux,parameters,num_iter,0,elapsed);
                 else
-                    write_to_file(nome_alg,nome_fich,best, m, g,custo_best,mbf/k,parameters,num_iter,1,elapsed);
+                    write_to_file(nome_alg,nome_fich,best, m, g,custo_best,mbfaux,parameters,num_iter,1,elapsed);
                 // Libertar memoria
                 free(sol);
                 free(best);
                 break;
                 
             case algGeneticoPorTorneio:
+            case algHibrido:
                 strcpy(nome_alg, "Genetico por torneio");
                 
                 best_run.sol = calloc(m,sizeof(int));
@@ -405,8 +409,18 @@ int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info p
                         gen_actual++;
                     }
                     
+                    // HIBRIDO: tentar melhorar solução com pesquisa local
+                    if (algoritmo == algHibrido)
+                    {
+                        strcpy(nome_alg, "Genetico por torneio + trepa colinas");
+                        // Trepa colinas simples
+                        best_run.fitness = trepa_colinas(best_run.sol, dist, m, g, 1000/*?*/);
+                    }
+                    
                     // Escreve resultados da repeticao que terminou
+                    printf("\nRepeticao %d:",k);
                     escreve_sol(best_run.sol, m, g);
+                    printf("Custo: %2d\n", best_run.fitness);
                     
                     mbf += best_run.fitness;
                     if (k == 0 || best_ever.fitness < best_run.fitness)
@@ -427,14 +441,17 @@ int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info p
                 }
                 
                 // Escreve resultados globais
+                printf("\n\nMBF: %f\n", mbf/k);
+                printf("\nMelhor solucao encontrada");
                 escreve_sol(best_ever.sol, m, g);
+                printf("Custo final: %2d\n", best_ever.fitness);
                 
                 // Escreve resultado globais para ficheiro
                 //write_to_file(nome_alg,nome_fich,best_ever.sol, m, g,best_ever.fitness,mbf/k,parameters,num_iter);
                 
                 free(best_run.sol);
                 free(best_ever.sol);
-            break;
+                break;
         }
     }
     
