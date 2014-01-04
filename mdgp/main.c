@@ -16,7 +16,7 @@ enum TipoAlgoritmo
 };
 
 #define DEFAULT_RUNS 10
-#define DEFAULT_FILE "RanInt_n010_ss_01.txt"
+#define DEFAULT_FILE "RanInt_n012_ss_01.txt"
 
 int main(int argc, char *argv[])
 {
@@ -59,9 +59,9 @@ int main(int argc, char *argv[])
 	init_rand();
     
     // Configuracao
-    algoritmo = algTrepaColinas;
+    algoritmo = algGeneticoPorTorneio;
     num_iter = 10;
-    if(argc==4)
+    if (argc == 4)
         parameters.numTabuDescidas = atoi(argv[3]);
     else
         parameters.numTabuDescidas = 5;
@@ -157,7 +157,7 @@ int main(int argc, char *argv[])
             break;
             
         case algGeneticoPorTorneio:
-            strcpy(nome_alg, "Genetico por torneio");
+            //strcpy(nome_alg, "Genetico por torneio");
             best_ever.sol = calloc(m,sizeof(int));
             
             // Repeticoes
@@ -219,8 +219,10 @@ int main(int argc, char *argv[])
             printf("\nMelhor solucao encontrada");
             escreve_sol(best_ever.sol, m, g);
             printf("Custo final: %2d\n", best_ever.fitness);
+            
             // Escreve resultado globais para ficheiro
-            write_to_file(nome_alg,nome_fich,best_ever.sol, m, g,best_ever.fitness,mbf/k,parameters,num_iter);
+            //write_to_file(nome_alg,nome_fich,best_ever.sol, m, g,best_ever.fitness,mbf/k,parameters,num_iter);
+            
             free(best_ever.sol);
             break;
     }

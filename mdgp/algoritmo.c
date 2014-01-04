@@ -341,19 +341,21 @@ void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
     double prob = 0.5;
     double r;
     
-    tab1 = calloc(d.m,sizeof(int));
+    tab1 = (int*)calloc(d.m,sizeof(int));
     if (!tab1)
     {
         printf("Erro na alocacao de memoria");
         exit(1);
     }
-    tab2 = calloc(d.m,sizeof(int));
+    
+    tab2 = (int*)calloc(d.m,sizeof(int));
     if (!tab2)
     {
         printf("Erro na alocacao de memoria");
         exit(1);
     }
-    conj = calloc(d.g,sizeof(int));
+    
+    conj = (int*)calloc(d.g,sizeof(int));
     if (!conj)
     {
         printf("Erro na alocacao de memoria");
@@ -363,7 +365,7 @@ void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
     //Teste
     //escreve_vect(p1, d.m);
     //escreve_vect(p2, d.m);
-
+    
     // Primeiro descendente
     i = 0;
     aceites = 0;
@@ -373,6 +375,13 @@ void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
         if (aceites >= d.m)
             break;
         
+        // Ultimo
+        if (i >= d.m)
+        {
+            i = 0;
+            continue;
+        }
+        
         r = rand_01();
         if (r < prob)
         {
@@ -381,7 +390,7 @@ void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
             {
                 if (conj[p2[i]] >= (d.m/d.g) || tab2[i] == 1)
                 {
-                    // Ultimo
+                    // Ultimo: Proteccao
                     if (i == d.m-1)
                         i = 0;
                     else
@@ -407,7 +416,7 @@ void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
             {
                 if (conj[p1[i]] >= (d.m/d.g) || tab1[i] == 1)
                 {
-                    // Ultimo
+                    // Ultimo: Proteccao
                     if (i == d.m-1)
                         i = 0;
                     else
@@ -426,6 +435,7 @@ void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
                 tab2[i] = 1;
             }
         }
+        
         conj[d1[i]]++;
         
         //Teste
@@ -453,6 +463,11 @@ void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
     aceites = 0;
     while (i<d.m)
     {
+        // Proteccao
+        if (aceites >= d.m)
+            break;
+        
+        // Restantes para o descendente 2
         if (tab1[i] == 0)
         {
             d2[aceites++] = p1[i];
@@ -463,7 +478,6 @@ void cx_order(int p1[], int p2[], int d1[], int d2[], struct info d)
         }
         i++;
     }
-    
     
     //Teste
     //printf("\n\ndescendente2");
