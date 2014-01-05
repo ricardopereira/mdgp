@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
     tests(2000,100,0.025,0.25,4,3,0);
     tests(2000,100,0.025,0.25,2,3,0);
     tests(2000,150,0.025,0.25,3,3,0);
-    
+   
     // Confirmar valores da matriz
     //mostra_matriz(dist,m);
     //printf("\n");
@@ -271,7 +271,7 @@ int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info p
     char nome_alg[100];
     int *sol, *best;
     int** dist;
-    int m, g, num_iter, k, i, runs, custo, custo_best = 0;
+    int m, g, num_iter, k, i,idx, runs, custo, custo_best = 0;
 	float mbfaux=0.0,mbf = 0.0;
     double elapsed;
     // Evolutivo
@@ -292,8 +292,12 @@ int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info p
     
     // Configuracao
     num_iter = 1;
-   // for(idx=0;idx<4;idx++)
+    for(idx=0;idx<4;idx++)
     {
+        
+        if(algoritmo==algHibrido||algoritmo==algGeneticoPorTorneio)
+            idx =4;
+        
         mbf = 0.0;
         custo_best= 0;
         start = clock();
@@ -504,6 +508,7 @@ int tests(int numgenerations,int popsize,float pm_swap,float pr, int t_size,int 
     workPCwork(algGeneticoPorTorneio, nome_fich,parameters);
     workPCwork(algHibrido, nome_fich,parameters);*/
     strcpy(nome_fich,"RanInt_n012_ss_01.txt");
+    if (flagPesLocal==1)
     {
         workPCwork(algTrepaColinas, nome_fich, parameters,0);
         workPCwork(algTrepaColinasProb, nome_fich, parameters,0);
@@ -515,6 +520,7 @@ int tests(int numgenerations,int popsize,float pm_swap,float pr, int t_size,int 
     workPCwork(algGeneticoPorTorneio, nome_fich,parameters);
     workPCwork(algHibrido, nome_fich,parameters);*/
     strcpy(nome_fich,"RanInt_n030_ss_01.txt");
+    if (flagPesLocal==1)
     {
         workPCwork(algTrepaColinas, nome_fich, parameters,0);
         workPCwork(algTrepaColinasProb, nome_fich, parameters,0);
@@ -526,6 +532,7 @@ int tests(int numgenerations,int popsize,float pm_swap,float pr, int t_size,int 
     workPCwork(algGeneticoPorTorneio, nome_fich,parameters);
     workPCwork(algHibrido, nome_fich,parameters);*/
     strcpy(nome_fich,"RanInt_n060_ss_01.txt");
+    if (flagPesLocal==1)
     {
         workPCwork(algTrepaColinas, nome_fich, parameters,0);
         workPCwork(algTrepaColinasProb, nome_fich, parameters,0);
@@ -537,6 +544,7 @@ int tests(int numgenerations,int popsize,float pm_swap,float pr, int t_size,int 
     workPCwork(algGeneticoPorTorneio, nome_fich,parameters);
     workPCwork(algHibrido, nome_fich,parameters);*/
     strcpy(nome_fich,"RanInt_n120_ss_01.txt");
+    if (flagPesLocal==1)
     {
         workPCwork(algTrepaColinas, nome_fich, parameters,0);
         workPCwork(algTrepaColinasProb, nome_fich, parameters,0);
@@ -548,6 +556,7 @@ int tests(int numgenerations,int popsize,float pm_swap,float pr, int t_size,int 
     workPCwork(algGeneticoPorTorneio, nome_fich,parameters);
     workPCwork(algHibrido, nome_fich,parameters);*/
     strcpy(nome_fich,"RanInt_n240_ss_01.txt");
+    if (flagPesLocal==1)
     {
         workPCwork(algTrepaColinas, nome_fich, parameters,0);
         workPCwork(algTrepaColinasProb, nome_fich, parameters,0);
@@ -559,6 +568,7 @@ int tests(int numgenerations,int popsize,float pm_swap,float pr, int t_size,int 
     workPCwork(algGeneticoPorTorneio, nome_fich,parameters);
     workPCwork(algHibrido, nome_fich,parameters);*/
     strcpy(nome_fich,"RanInt_n480_ss_01.txt");
+    if (flagPesLocal==1)
     {
         workPCwork(algTrepaColinas, nome_fich, parameters,0);
         workPCwork(algTrepaColinasProb, nome_fich, parameters,0);

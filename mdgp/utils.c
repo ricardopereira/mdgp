@@ -328,7 +328,7 @@ int write_to_file(char const *nome_alg,char *nomefich, int *sol, int m, int g,in
     
     
     if (f == NULL) return -1;
-    if((numiter==10)||(numiter=2000)||(numiter==1000))
+    if((numiter==10)||(flagenum==2&&(numiter==2000||numiter==1000)))
     {
         if (flagWriteAlg==1)
         {
