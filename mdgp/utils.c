@@ -316,7 +316,7 @@ int flip()
 		return 1;
 }
 
-int write_to_file(char const *nome_alg,char *nomefich, int *sol, int m, int g,int custo,float mbf,struct info param, int numiter,int flagenum, double elapsed)
+int write_to_file(char const *nome_alg,char *nomefich, int *sol, int m, int g,int custo,float mbf,struct info param, int numiter,int flagenum, double elapsed,int flagWriteAlg)
 {
     char filename[100];
     int i, subc;
@@ -328,17 +328,20 @@ int write_to_file(char const *nome_alg,char *nomefich, int *sol, int m, int g,in
     
     
     if (f == NULL) return -1;
-    if(numiter==10)
+    if((numiter==10)||(numiter=2000)||(numiter==1000))
     {
-        fprintf(f,"Algoritmo:;%s\n", nome_alg);
-        fprintf(f,"Ficheiro:;%s\n", nomefich);
+        if (flagWriteAlg==1)
+        {
+            fprintf(f,"Algoritmo:;%s", nome_alg);
+        }
+        fprintf(f,"\nFicheiro:;%s\n", nomefich);
     }
     
-    fprintf(f,"\nParametros\n");
-    fprintf(f,"num iter:;%d\n", numiter);
-    if (flagenum==1)
+    //fprintf(f,"\nParametros\n");
+    if (flagenum==1||flagenum==0)
     {
-        fprintf(f,"num descidas TABU:;%d\n",param.numTabuDescidas);
+        fprintf(f,"num iter:;%d\n", numiter);
+    //    fprintf(f,"num descidas TABU:;%d\n",param.numTabuDescidas);
     }
     if (flagenum==2)
     {
@@ -351,13 +354,13 @@ int write_to_file(char const *nome_alg,char *nomefich, int *sol, int m, int g,in
     
     fprintf(f, "MBF:;%f",mbf);
     
-    for (subc=0; subc<g; subc++)
+    /*for (subc=0; subc<g; subc++)
     {
         fprintf(f,"\nConjunto %d: ",subc+1);
         for(i=0; i<m; i++)
             if(sol[i] == subc)
                 fprintf(f,";%2d  ", i);
-    }
+    }*/
     fprintf(f,"\n");
     
     fprintf(f, "Custo final:;%d\n", custo);

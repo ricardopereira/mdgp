@@ -20,8 +20,8 @@ enum TipoAlgoritmo
 #define DEFAULT_RUNS 10
 #define DEFAULT_FILE "RanInt_n060_ss_01.txt"
 
-int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info parameters);
-int tests();
+int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info parameters,int flagWriteAlg);
+int tests(int numgenerations,int popsize,float pm_swap,float pr, int t_size,int numTabuDescidas,int flagPesLocal);
 
 int main(int argc, char *argv[])
 {
@@ -87,7 +87,16 @@ int main(int argc, char *argv[])
     
     
     //testes
-    tests();
+    tests(2000,100,0.0035,0.40,3,3,1);
+    tests(2000,100,0.001,0.70,3,3,0);
+    tests(2000,100,0.001,0.80,3,3,0);
+    tests(2000,100,0.0025,0.40,3,3,0);
+    tests(2000,100,0.1,0.30,3,3,0);
+    tests(2000,100,0.025,0.25,3,3,0);
+    tests(1000,100,0.025,0.25,3,3,0);
+    tests(2000,100,0.025,0.25,4,3,0);
+    tests(2000,100,0.025,0.25,2,3,0);
+    tests(2000,150,0.025,0.25,3,3,0);
     
     // Confirmar valores da matriz
     //mostra_matriz(dist,m);
@@ -256,13 +265,13 @@ int main(int argc, char *argv[])
 }
 
 //repete se o codigo para nao estarmos a fazer o merge do codigo
-int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info parameters)
+int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info parameters,int flagWriteAlg)
 {
     char nome_fich[100];
     char nome_alg[100];
     int *sol, *best;
     int** dist;
-    int m, g, num_iter, k, i,idx, runs, custo, custo_best = 0;
+    int m, g, num_iter, k, i, runs, custo, custo_best = 0;
 	float mbfaux=0.0,mbf = 0.0;
     double elapsed;
     // Evolutivo
@@ -283,7 +292,7 @@ int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info p
     
     // Configuracao
     num_iter = 1;
-    for(idx=0;idx<4;idx++)
+   // for(idx=0;idx<4;idx++)
     {
         mbf = 0.0;
         custo_best= 0;
@@ -366,18 +375,17 @@ int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info p
                 // Escreve resultado globais para ficheiro
                 mbfaux = mbf/k;
                 if(algoritmo!=algTabu)
-                    write_to_file(nome_alg,nome_fich,best, m, g,custo_best,mbfaux,parameters,num_iter,0,elapsed);
+                    write_to_file(nome_alg,nome_fich,best, m, g,custo_best,mbfaux,parameters,num_iter,0,elapsed,flagWriteAlg);
                 else
-                    write_to_file(nome_alg,nome_fich,best, m, g,custo_best,mbfaux,parameters,num_iter,1,elapsed);
+                    write_to_file(nome_alg,nome_fich,best, m, g,custo_best,mbfaux,parameters,num_iter,1,elapsed,flagWriteAlg);
                 // Libertar memoria
                 free(sol);
                 free(best);
                 break;
                 
             case algGeneticoPorTorneio:
-            case algHibrido:
                 strcpy(nome_alg, "Genetico por torneio");
-                
+            case algHibrido:
                 best_run.sol = calloc(m,sizeof(int));
                 best_ever.sol = calloc(m,sizeof(int));
                 
@@ -451,8 +459,12 @@ int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info p
                 escreve_sol(best_ever.sol, m, g);
                 printf("Custo final: %2d\n", best_ever.fitness);
                 
+                end = clock();
+                elapsed = (double)(end - start) / CLOCKS_PER_SEC;
                 // Escreve resultado globais para ficheiro
-                //write_to_file(nome_alg,nome_fich,best_ever.sol, m, g,best_ever.fitness,mbf/k,parameters,num_iter);
+                mbfaux = mbf/k;
+                write_to_file(nome_alg,nome_fich,best_ever.sol, m, g,best_ever.fitness,mbfaux,parameters,parameters.numGenerations,2,elapsed,flagWriteAlg);
+
                 
                 free(best_run.sol);
                 free(best_ever.sol);
@@ -467,38 +479,95 @@ int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info p
     return 0;
 }
 
-int tests()
+int tests(int numgenerations,int popsize,float pm_swap,float pr, int t_size,int numTabuDescidas,int flagPesLocal)
 {
 	struct info parameters;
     char nome_fich[100];
     
+    
+    parameters.numGenerations = numgenerations;
+    parameters.popsize = popsize;
+    parameters.pm_swap = pm_swap;
+    parameters.pr = pr;
+    parameters.t_size = t_size;
+    parameters.numTabuDescidas  = numTabuDescidas;
     strcpy(nome_fich,"RanInt_n010_ss_01.txt");
-    
-    strcpy(nome_fich,"RanInt_n010_ss_02.txt");
-    
+    if (flagPesLocal==1)
+    {
+        workPCwork(algTrepaColinas, nome_fich, parameters,1);
+        workPCwork(algTrepaColinasProb, nome_fich, parameters,1);
+        workPCwork(algTabu, nome_fich, parameters,1);
+    }
+    workPCwork(algGeneticoPorTorneio, nome_fich,parameters,1);
+    workPCwork(algHibrido, nome_fich,parameters,1);
+/*    strcpy(nome_fich,"RanInt_n010_ss_02.txt");
+    workPCwork(algGeneticoPorTorneio, nome_fich,parameters);
+    workPCwork(algHibrido, nome_fich,parameters);*/
     strcpy(nome_fich,"RanInt_n012_ss_01.txt");
-    
-    strcpy(nome_fich,"RanInt_n012_ss_02.txt");
-    
+    {
+        workPCwork(algTrepaColinas, nome_fich, parameters,0);
+        workPCwork(algTrepaColinasProb, nome_fich, parameters,0);
+        workPCwork(algTabu, nome_fich, parameters,0);
+    }
+    workPCwork(algGeneticoPorTorneio, nome_fich,parameters,0);
+    workPCwork(algHibrido, nome_fich,parameters,0);
+/*    strcpy(nome_fich,"RanInt_n012_ss_02.txt");
+    workPCwork(algGeneticoPorTorneio, nome_fich,parameters);
+    workPCwork(algHibrido, nome_fich,parameters);*/
     strcpy(nome_fich,"RanInt_n030_ss_01.txt");
-    
-    strcpy(nome_fich,"RanInt_n030_ss_02.txt");
-    
+    {
+        workPCwork(algTrepaColinas, nome_fich, parameters,0);
+        workPCwork(algTrepaColinasProb, nome_fich, parameters,0);
+        workPCwork(algTabu, nome_fich, parameters,0);
+    }
+    workPCwork(algGeneticoPorTorneio, nome_fich,parameters,0);
+    workPCwork(algHibrido, nome_fich,parameters,0);
+/*    strcpy(nome_fich,"RanInt_n030_ss_02.txt");
+    workPCwork(algGeneticoPorTorneio, nome_fich,parameters);
+    workPCwork(algHibrido, nome_fich,parameters);*/
     strcpy(nome_fich,"RanInt_n060_ss_01.txt");
-    
-    strcpy(nome_fich,"RanInt_n060_ss_02.txt");
-    
+    {
+        workPCwork(algTrepaColinas, nome_fich, parameters,0);
+        workPCwork(algTrepaColinasProb, nome_fich, parameters,0);
+        workPCwork(algTabu, nome_fich, parameters,0);
+    }
+    workPCwork(algGeneticoPorTorneio, nome_fich,parameters,0);
+    workPCwork(algHibrido, nome_fich,parameters,0);
+/*    strcpy(nome_fich,"RanInt_n060_ss_02.txt");
+    workPCwork(algGeneticoPorTorneio, nome_fich,parameters);
+    workPCwork(algHibrido, nome_fich,parameters);*/
     strcpy(nome_fich,"RanInt_n120_ss_01.txt");
-    
-    strcpy(nome_fich,"RanInt_n120_ss_02.txt");
-    
+    {
+        workPCwork(algTrepaColinas, nome_fich, parameters,0);
+        workPCwork(algTrepaColinasProb, nome_fich, parameters,0);
+        workPCwork(algTabu, nome_fich, parameters,0);
+    }
+    workPCwork(algGeneticoPorTorneio, nome_fich,parameters,0);
+    workPCwork(algHibrido, nome_fich,parameters,0);
+/*    strcpy(nome_fich,"RanInt_n120_ss_02.txt");
+    workPCwork(algGeneticoPorTorneio, nome_fich,parameters);
+    workPCwork(algHibrido, nome_fich,parameters);*/
     strcpy(nome_fich,"RanInt_n240_ss_01.txt");
-    
-    strcpy(nome_fich,"RanInt_n240_ss_02.txt");
-    
+    {
+        workPCwork(algTrepaColinas, nome_fich, parameters,0);
+        workPCwork(algTrepaColinasProb, nome_fich, parameters,0);
+        workPCwork(algTabu, nome_fich, parameters,0);
+    }
+    workPCwork(algGeneticoPorTorneio, nome_fich,parameters,0);
+    workPCwork(algHibrido, nome_fich,parameters,0);
+/*    strcpy(nome_fich,"RanInt_n240_ss_02.txt");
+    workPCwork(algGeneticoPorTorneio, nome_fich,parameters);
+    workPCwork(algHibrido, nome_fich,parameters);*/
     strcpy(nome_fich,"RanInt_n480_ss_01.txt");
-    
-    strcpy(nome_fich,"RanInt_n480_ss_02.txt");
-    
+    {
+        workPCwork(algTrepaColinas, nome_fich, parameters,0);
+        workPCwork(algTrepaColinasProb, nome_fich, parameters,0);
+        workPCwork(algTabu, nome_fich, parameters,0);
+    }
+    workPCwork(algGeneticoPorTorneio, nome_fich,parameters,0);
+    workPCwork(algHibrido, nome_fich,parameters,0);
+/*    strcpy(nome_fich,"RanInt_n480_ss_02.txt");
+    workPCwork(algGeneticoPorTorneio, nome_fich,parameters);
+    workPCwork(algHibrido, nome_fich,parameters);*/
     return 0;
 }
