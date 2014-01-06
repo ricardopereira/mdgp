@@ -18,7 +18,7 @@ enum TipoAlgoritmo
 };
 
 #define DEFAULT_RUNS 10
-#define DEFAULT_FILE "RanInt_n060_ss_01.txt"
+#define DEFAULT_FILE "RanInt_n012_ss_01.txt"
 
 int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info parameters,int flagWriteAlg);
 int tests(int numgenerations,int popsize,float pm_swap,float pr, int t_size,int numTabuDescidas,int flagPesLocal);
@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
     enum TipoAlgoritmo algoritmo;
     char nome_fich[100];
     char nome_alg[100];
+    // Local
     int *sol, *best;
     int** dist;
     int m, g, num_iter, k, i, runs, custo, custo_best = 0;
@@ -52,10 +53,8 @@ int main(int argc, char *argv[])
     {
 		runs = DEFAULT_RUNS;
         printf("Nome do Ficheiro: ");
-        
-        // Teste
-        //gets(nome_fich);
-        strcpy(nome_fich,DEFAULT_FILE);
+        // Utiliza ficheiro por defeito
+        strcpy(nome_fich,DEFAULT_FILE); //gets(nome_fich);
     }
     
 	if(runs <= 0)
@@ -64,7 +63,7 @@ int main(int argc, char *argv[])
 	init_rand();
     
     // Configuracao
-    algoritmo = algHibrido;
+    algoritmo = algTrepaColinas;
     num_iter = 1000;
     if (argc == 4)
         parameters.numTabuDescidas = atoi(argv[3]);
@@ -86,7 +85,8 @@ int main(int argc, char *argv[])
     printf("Sub-conjuntos: %d\n",g);
     
     
-    //testes
+    //Testes
+    /*
     tests(2000,100,0.0035,0.40,3,3,1);
     tests(2000,100,0.001,0.70,3,3,0);
     tests(2000,100,0.001,0.80,3,3,0);
@@ -97,6 +97,7 @@ int main(int argc, char *argv[])
     tests(2000,100,0.025,0.25,4,3,0);
     tests(2000,100,0.025,0.25,2,3,0);
     tests(2000,150,0.025,0.25,3,3,0);
+     */
    
     // Confirmar valores da matriz
     //mostra_matriz(dist,m);
@@ -217,7 +218,7 @@ int main(int argc, char *argv[])
                 {
                     strcpy(nome_alg, "Genetico por torneio + trepa colinas");
                     // Trepa colinas simples
-                    best_run.fitness = trepa_colinas(best_run.sol, dist, m, g, 1000/*?*/);
+                    best_run.fitness = trepa_colinas(best_run.sol, dist, m, g, 1000/*Melhores resultados*/);
                 }
                 
                 // Escreve resultados da repeticao que terminou
@@ -249,9 +250,6 @@ int main(int argc, char *argv[])
             escreve_sol(best_ever.sol, m, g);
             printf("Custo final: %2d\n", best_ever.fitness);
             
-            // Escreve resultado globais para ficheiro
-            //write_to_file(nome_alg,nome_fich,best_ever.sol, m, g,best_ever.fitness,mbf/k,parameters,num_iter);
-            
             free(best_run.sol);
             free(best_ever.sol);
             break;
@@ -269,6 +267,7 @@ int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info p
 {
     char nome_fich[100];
     char nome_alg[100];
+    // Local
     int *sol, *best;
     int** dist;
     int m, g, num_iter, k, i,idx, runs, custo, custo_best = 0;
@@ -289,31 +288,24 @@ int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info p
 	
 	init_rand();
     
-    
     // Configuracao
     num_iter = 1;
-    for(idx=0;idx<4;idx++)
+    for(idx=0; idx<4; idx++)
     {
         
-        if(algoritmo==algHibrido||algoritmo==algGeneticoPorTorneio)
-            idx =4;
+        if (algoritmo == algHibrido || algoritmo == algGeneticoPorTorneio)
+            idx = 4;
         
         mbf = 0.0;
         custo_best= 0;
         start = clock();
         num_iter = num_iter*10;
         
-        
         // Preenche matriz de distancias
         dist = init_dados(nome_fich, &m, &g);
         
         parameters.m = m; //Nr Elementos
         parameters.g = g; //Nr Sub-conjuntos
-        
-        
-        // Confirmar valores da matriz
-        //mostra_matriz(dist,m);
-        //printf("\n");
         
         // Maximizacao
         switch (algoritmo)
@@ -382,6 +374,7 @@ int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info p
                     write_to_file(nome_alg,nome_fich,best, m, g,custo_best,mbfaux,parameters,num_iter,0,elapsed,flagWriteAlg);
                 else
                     write_to_file(nome_alg,nome_fich,best, m, g,custo_best,mbfaux,parameters,num_iter,1,elapsed,flagWriteAlg);
+                
                 // Libertar memoria
                 free(sol);
                 free(best);
@@ -431,7 +424,7 @@ int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info p
                     {
                         strcpy(nome_alg, "Genetico por torneio + trepa colinas");
                         // Trepa colinas simples
-                        best_run.fitness = trepa_colinas(best_run.sol, dist, m, g, 1000/*?*/);
+                        best_run.fitness = trepa_colinas(best_run.sol, dist, m, g, 1000/*Melhores resultados*/);
                     }
                     
                     // Escreve resultados da repeticao que terminou
@@ -468,7 +461,6 @@ int workPCwork(enum TipoAlgoritmo algoritmo, char *Defaul_filename,struct info p
                 // Escreve resultado globais para ficheiro
                 mbfaux = mbf/k;
                 write_to_file(nome_alg,nome_fich,best_ever.sol, m, g,best_ever.fitness,mbfaux,parameters,parameters.numGenerations,2,elapsed,flagWriteAlg);
-
                 
                 free(best_run.sol);
                 free(best_ever.sol);

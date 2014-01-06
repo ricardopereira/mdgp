@@ -319,7 +319,6 @@ int flip()
 int write_to_file(char const *nome_alg,char *nomefich, int *sol, int m, int g,int custo,float mbf,struct info param, int numiter,int flagenum, double elapsed,int flagWriteAlg)
 {
     char filename[100];
-    int i, subc;
     
     FILE *f;
     strcpy(filename,nome_alg);
@@ -353,14 +352,7 @@ int write_to_file(char const *nome_alg,char *nomefich, int *sol, int m, int g,in
     }
     
     fprintf(f, "MBF:;%f",mbf);
-    
-    /*for (subc=0; subc<g; subc++)
-    {
-        fprintf(f,"\nConjunto %d: ",subc+1);
-        for(i=0; i<m; i++)
-            if(sol[i] == subc)
-                fprintf(f,";%2d  ", i);
-    }*/
+
     fprintf(f,"\n");
     
     fprintf(f, "Custo final:;%d\n", custo);

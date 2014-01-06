@@ -59,7 +59,7 @@ void gera_vizinho_afastado(int a[], int b[], int n)
 
 // Gera o melhor de N vizinhos
 // Parametros: solucao actual, vizinho, numero de vertices
-void gera_vizinho_v2(int a[], int b[], int n, int g,int **mat)
+void gera_vizinho_v2(int a[], int b[], int n, int g, int **mat)
 {
     int p1, p2;
     int *auxbfinal,*auxb;
